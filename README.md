@@ -1,6 +1,6 @@
 # REscript
 
-REscript is the official open-source codebase for the hosted [rescript.kevv.ai](https://rescript.kevv.ai) product. It generates daily real estate video scripts for selected North American markets, emails them to subscribers, and serves private viewer links with signed access tokens.
+REscript is the open-source codebase for the hosted [rescript.kevv.ai](https://rescript.kevv.ai) product. It generates daily real estate video scripts for selected North American markets, emails them to subscribers, and serves private viewer links with signed access tokens.
 
 ## Open Source Status
 
@@ -102,8 +102,8 @@ npm run dry-run
 - Generated content still requires human review before publication, especially for legal, tax, fair housing, MLS, or brokerage-sensitive claims.
 - `public/privacy.html` and `public/terms.html` are baseline product pages and should still be reviewed by counsel before launch.
 - In `resend` mode, the app sends mail through the Resend API only. In `gmail` mode, it uses Gmail SMTP only. The dual-provider support is for rollout and fallback, not simultaneous delivery.
-- Public forks should replace example sender/support addresses in `.env` and should not reuse official Kevv mailboxes or domains.
+- Public forks should replace example sender/support addresses in `.env` and should not reuse Kevv mailboxes or domains.
 
 ## License
 
-ISC. See [LICENSE](./LICENSE).
+Apache-2.0. See [LICENSE](./LICENSE).

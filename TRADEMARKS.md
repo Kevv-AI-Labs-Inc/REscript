@@ -2,7 +2,7 @@
 
 This repository contains the official branded REscript product codebase maintained by Kevv AI Labs Inc.
 
-The source code is licensed separately from the product brand.
+The source code is licensed under Apache-2.0 separately from the product brand.
 
 Not granted by the software license:
 
