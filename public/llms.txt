@@ -1,0 +1,24 @@
+# REscript
+
+> REscript is a SaaS product that generates daily, market-specific video script drafts for North American real estate agents.
+
+## Primary pages
+- [Home](https://rescript.kevv.ai/)
+- [Markets](https://rescript.kevv.ai/markets.html)
+- [Privacy Policy](https://rescript.kevv.ai/privacy.html)
+- [Terms of Service](https://rescript.kevv.ai/terms.html)
+
+## Product summary
+- Audience: North American real estate agents, team leads, and brokerage marketing operators.
+- Value: Daily script drafts by market, language, and audience profile.
+- Markets: New York, Los Angeles, San Francisco Bay Area, Chicago, Miami, Seattle, Boston, Houston.
+- Pricing: US$9.90 per month after one free sample.
+- Delivery: Private viewer links and subscription management.
+
+## Compliance notes
+- Generated scripts are drafting aids and require human review before publication.
+- REscript is not legal, tax, financial, MLS, or fair-housing advice.
+- Private pages (`/view.html`, `/manage.html`, `/success.html`, `/admin.html`) are token-gated and should not be indexed.
+
+## Contact
+- Email: support@kevv.ai

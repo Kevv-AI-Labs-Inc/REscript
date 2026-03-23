@@ -1,0 +1,408 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Subscription Confirmed · REscript</title>
+    <meta name="robots" content="noindex, nofollow, noarchive, nosnippet">
+    <meta name="googlebot" content="noindex, nofollow, noarchive, nosnippet">
+    <meta name="theme-color" content="#203443">
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg">
+    <link rel="apple-touch-icon" href="/favicon.svg">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@500;600;700&family=IBM+Plex+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg: #f7f2e8;
+            --ink: #15212b;
+            --muted: #5b6775;
+            --line: rgba(21, 33, 43, 0.12);
+            --accent: #9b4a32;
+            --navy: #203443;
+            --green: #24483c;
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+
+        body {
+            font-family: "IBM Plex Sans", sans-serif;
+            min-height: 100vh;
+            padding: 24px;
+            color: var(--ink);
+            background:
+                radial-gradient(circle at top left, rgba(155, 74, 50, 0.10), transparent 24%),
+                radial-gradient(circle at top right, rgba(32, 52, 67, 0.10), transparent 26%),
+                linear-gradient(180deg, #f9f3e8 0%, #f1ecdf 100%);
+        }
+
+        .card {
+            position: relative;
+            width: min(100%, 720px);
+            margin: 0 auto;
+            padding: 34px;
+            border-radius: 28px;
+            border: 1px solid var(--line);
+            background: rgba(255, 252, 247, 0.86);
+            box-shadow: 0 28px 70px rgba(21, 33, 43, 0.10);
+        }
+
+        .lang-toggle {
+            position: absolute;
+            top: 24px;
+            right: 24px;
+            min-height: 42px;
+            padding: 0 16px;
+            border-radius: 999px;
+            border: 1px solid var(--line);
+            background: rgba(255,255,255,0.88);
+            color: var(--ink);
+            font: inherit;
+            font-weight: 600;
+            cursor: pointer;
+        }
+
+        .eyebrow {
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            padding: 9px 14px;
+            border-radius: 999px;
+            border: 1px solid var(--line);
+            color: var(--accent);
+            font-size: 12px;
+            letter-spacing: 0.14em;
+            text-transform: uppercase;
+            margin-bottom: 18px;
+        }
+
+        .eyebrow::before {
+            content: "";
+            width: 8px;
+            height: 8px;
+            border-radius: 999px;
+            background: var(--accent);
+        }
+
+        h1 {
+            font-family: "Cormorant Garamond", serif;
+            font-size: clamp(2.7rem, 7vw, 4.4rem);
+            line-height: 1.05;
+            margin-bottom: 14px;
+        }
+
+        p {
+            color: var(--muted);
+            line-height: 1.8;
+            margin-bottom: 14px;
+        }
+
+        .status-bar {
+            margin: 22px 0 10px;
+            padding: 18px 20px;
+            border-radius: 18px;
+            background: rgba(36, 72, 60, 0.07);
+            border: 1px solid rgba(36, 72, 60, 0.18);
+            color: var(--green);
+        }
+
+        .steps {
+            margin-top: 24px;
+            display: grid;
+            gap: 12px;
+        }
+
+        .step {
+            display: grid;
+            grid-template-columns: 54px 1fr;
+            gap: 14px;
+            padding: 18px;
+            border-radius: 18px;
+            background: rgba(255,255,255,0.72);
+            border: 1px solid var(--line);
+        }
+
+        .step-number {
+            width: 54px;
+            height: 54px;
+            border-radius: 16px;
+            display: grid;
+            place-items: center;
+            background: rgba(32, 52, 67, 0.08);
+            color: var(--navy);
+            font-family: "Cormorant Garamond", serif;
+            font-size: 1.8rem;
+        }
+
+        .step strong {
+            display: block;
+            margin-bottom: 6px;
+            color: var(--ink);
+        }
+
+        .step span {
+            overflow-wrap: anywhere;
+        }
+
+        .actions {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 12px;
+            margin-top: 26px;
+        }
+
+        .button {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            min-height: 50px;
+            padding: 0 20px;
+            border-radius: 999px;
+            border: 1px solid transparent;
+            background: var(--navy);
+            color: white;
+            font-weight: 600;
+            text-decoration: none;
+        }
+
+        .button.secondary {
+            background: white;
+            color: var(--ink);
+            border-color: var(--line);
+        }
+
+        @media (max-width: 760px) {
+            body {
+                padding: 12px;
+            }
+
+            .card {
+                padding: 20px;
+                border-radius: 22px;
+            }
+
+            .lang-toggle {
+                position: static;
+                margin-left: auto;
+                margin-bottom: 12px;
+                display: inline-flex;
+            }
+
+            h1 {
+                font-size: clamp(2rem, 10vw, 3rem);
+            }
+
+            .step {
+                grid-template-columns: 1fr;
+            }
+
+            .step-number {
+                width: 46px;
+                height: 46px;
+                border-radius: 12px;
+                font-size: 1.5rem;
+            }
+
+            .button {
+                width: 100%;
+            }
+        }
+    </style>
+</head>
+<body>
+    <main class="card">
+        <button class="lang-toggle" id="langToggle" onclick="toggleLang()">中文</button>
+        <div class="eyebrow" id="eyebrow">Subscription confirmed</div>
+        <h1 id="pageTitle">Your REscript delivery is active.</h1>
+        <p id="introCopy">
+            Checkout is complete. You now have a live subscription with private access links, direct subscription controls, and delivery based on the market, language, and audience preferences attached to your account.
+        </p>
+
+        <div class="status-bar" id="statusBar">
+            Your subscription is configured to start delivering the daily brief on the next scheduled run. You can also open your manage-subscription page from every email.
+        </div>
+
+        <div class="steps">
+            <div class="step">
+                <div class="step-number">1</div>
+                <div>
+                    <strong id="step1Title">Watch for the first delivery</strong>
+                    <span id="step1Copy">REscript sends a private viewer link rather than a public content page. Save the email so you can reopen the day’s package when you need it.</span>
+                </div>
+            </div>
+            <div class="step">
+                <div class="step-number">2</div>
+                <div>
+                    <strong id="step2Title">Review before publishing</strong>
+                    <span id="step2Copy">Use the scripts as production drafts. Add your own voice, compliance review, and brokerage-specific guardrails before publishing.</span>
+                </div>
+            </div>
+            <div class="step">
+                <div class="step-number">3</div>
+                <div>
+                    <strong id="step3Title">Manage billing and delivery</strong>
+                    <span id="step3Copy">The same manage-subscription page controls both email delivery status and Stripe billing access for paid accounts.</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="actions" id="viewLatest">
+            <a class="button secondary" href="/">Back to home</a>
+        </div>
+    </main>
+
+    <script>
+        const copy = {
+            en: {
+                title: 'Subscription Confirmed · REscript',
+                toggle: '中文',
+                eyebrow: 'Subscription confirmed',
+                pageTitle: 'Your REscript delivery is active.',
+                introCopy: 'Checkout is complete. You now have a live subscription with private access links, direct subscription controls, and delivery based on the market, language, and audience preferences attached to your account.',
+                statusBar: 'Your subscription is configured to start delivering the daily brief on the next scheduled run. You can also open your manage-subscription page from every email.',
+                step1Title: 'Watch for the first delivery',
+                step1Copy: 'REscript sends a private viewer link rather than a public content page. Save the email so you can reopen the day’s package when you need it.',
+                step2Title: 'Review before publishing',
+                step2Copy: 'Use the scripts as production drafts. Add your own voice, compliance review, and brokerage-specific guardrails before publishing.',
+                step3Title: 'Manage billing and delivery',
+                step3Copy: 'The same manage-subscription page controls both email delivery status and Stripe billing access for paid accounts.',
+                openLatest: 'Open latest scripts',
+                manage: 'Manage subscription',
+                home: 'Back to home',
+                audienceTone: {
+                    general: {
+                        introCopy: 'Checkout is complete. You now have a live subscription with private access links, direct subscription controls, and delivery based on the market, language, and audience preferences attached to your account.',
+                        statusBar: 'Your subscription is set to start on the next scheduled run with the general North American audience lens active for your account.',
+                        step1Copy: 'REscript sends a private viewer link rather than a public content page. Save the email so you can reopen the day’s market-desk package when you need it.',
+                        step2Copy: 'Use the scripts as production drafts for mainstream buyer-seller education, market commentary, and brokerage-friendly publishing.',
+                        step3Copy: 'The same manage-subscription page controls both email delivery status and Stripe billing access for paid accounts.',
+                    },
+                    'chinese-community': {
+                        introCopy: 'Checkout is complete. You now have a live subscription with private access links, direct subscription controls, and delivery based on the market, language, and community-oriented audience preferences attached to your account.',
+                        statusBar: 'Your subscription is set to start on the next scheduled run with the Chinese-speaking and relocation audience lens active for your account.',
+                        step1Copy: 'REscript sends a private viewer link rather than a public content page. Save the email so you can reopen the day’s community-desk package when you need it.',
+                        step2Copy: 'Use the scripts as production drafts for bilingual education, relocation explainers, and trust-building content for Chinese-speaking households.',
+                        step3Copy: 'The same manage-subscription page lets you adjust delivery settings as your audience mix changes, while also opening Stripe billing for paid accounts.',
+                    },
+                },
+            },
+            zh: {
+                title: '订阅已确认 · REscript',
+                toggle: 'EN',
+                eyebrow: '订阅已确认',
+                pageTitle: '你的 REscript 交付已开启。',
+                introCopy: '支付已经完成。你现在拥有正式订阅，可通过私有访问链接查看内容，并直接管理投递与订阅状态；交付内容会按你的市场、语言和受众画像偏好匹配。',
+                statusBar: '你的订阅会在下一次计划任务执行时开始正式投递。之后每封邮件里也都会附带 manage-subscription 页面入口。',
+                step1Title: '留意第一封正式交付邮件',
+                step1Copy: 'REscript 发送的是私有 viewer link，不是公开内容页。建议保留邮件，后续需要时可以重新打开当天内容包。',
+                step2Title: '发布前先人工审核',
+                step2Copy: '把脚本当作生产初稿使用，在发布前加入你的个人语气、合规判断以及 brokerage 内部要求。',
+                step3Title: '统一管理账单和投递',
+                step3Copy: '同一个 manage-subscription 页面既能控制邮件投递状态，也能给付费用户打开 Stripe billing portal。',
+                openLatest: '打开最新脚本',
+                manage: '管理订阅',
+                home: '返回首页',
+                audienceTone: {
+                    general: {
+                        introCopy: '支付已经完成。你现在拥有正式订阅，可通过私有访问链接查看内容，并直接管理投递与订阅状态；交付内容会按你的市场、语言和主流北美客户受众偏好匹配。',
+                        statusBar: '你的订阅会在下一次计划任务执行时开始正式投递，并默认按“主流北美客户受众”模式生成内容。',
+                        step1Copy: 'REscript 发送的是私有 viewer link，不是公开内容页。建议保留邮件，后续需要时可以重新打开当天的市场内容包。',
+                        step2Copy: '把脚本当作面向主流买卖家教育、市场点评和经纪人品牌内容的生产初稿使用。',
+                        step3Copy: '同一个 manage-subscription 页面既能控制邮件投递状态，也能给付费用户打开 Stripe billing portal。',
+                    },
+                    'chinese-community': {
+                        introCopy: '支付已经完成。你现在拥有正式订阅，可通过私有访问链接查看内容，并直接管理投递与订阅状态；交付内容会按你的市场、语言和华语 / 搬迁家庭受众偏好匹配。',
+                        statusBar: '你的订阅会在下一次计划任务执行时开始正式投递，并默认按“华语 / 搬迁家庭受众”模式生成内容。',
+                        step1Copy: 'REscript 发送的是私有 viewer link，不是公开内容页。建议保留邮件，后续需要时可以重新打开当天的社群内容包。',
+                        step2Copy: '把脚本当作双语教育、搬迁流程解释和社区信任建立内容的生产初稿使用。',
+                        step3Copy: '同一个 manage-subscription 页面既能帮你按 audience 切换后续交付，也能给付费用户打开 Stripe billing portal。',
+                    },
+                },
+            },
+        };
+
+        let currentLang = 'en';
+        let currentAudience = 'general';
+        const params = new URLSearchParams(window.location.search);
+        const sessionId = params.get('session_id');
+
+        function getUi() {
+            return copy[currentLang] || copy.en;
+        }
+
+        function setText(id, value) {
+            const el = document.getElementById(id);
+            if (el) {
+                el.textContent = value;
+            }
+        }
+
+        function setLang(nextLang) {
+            currentLang = nextLang === 'zh' ? 'zh' : 'en';
+            localStorage.setItem('rescript-ui-lang', currentLang);
+            const ui = getUi();
+            document.documentElement.lang = currentLang === 'zh' ? 'zh-CN' : 'en';
+            document.title = ui.title;
+            document.getElementById('langToggle').textContent = ui.toggle;
+            setText('eyebrow', ui.eyebrow);
+            setText('pageTitle', ui.pageTitle);
+            setText('step1Title', ui.step1Title);
+            setText('step2Title', ui.step2Title);
+            setText('step3Title', ui.step3Title);
+            applyAudienceNarrative();
+        }
+
+        function applyAudienceNarrative() {
+            const ui = getUi();
+            const narrative = ui.audienceTone[currentAudience] || ui.audienceTone.general;
+            setText('introCopy', narrative.introCopy);
+            setText('statusBar', narrative.statusBar);
+            setText('step1Copy', narrative.step1Copy);
+            setText('step2Copy', narrative.step2Copy);
+            setText('step3Copy', narrative.step3Copy);
+        }
+
+        function toggleLang() {
+            setLang(currentLang === 'en' ? 'zh' : 'en');
+            renderActions(window.sessionData || null);
+        }
+
+        function renderActions(data) {
+            const ui = getUi();
+            const actions = [];
+            if (data && data.viewUrl) {
+                actions.push(`<a class="button" href="${data.viewUrl}">${ui.openLatest}</a>`);
+            }
+            if (data && data.manageUrl) {
+                actions.push(`<a class="button secondary" href="${data.manageUrl}">${ui.manage}</a>`);
+            }
+            actions.push(`<a class="button secondary" href="/">${ui.home}</a>`);
+            document.getElementById('viewLatest').innerHTML = actions.join('');
+        }
+
+        window.sessionData = null;
+        const savedLang = localStorage.getItem('rescript-ui-lang');
+        const browserLang = navigator.language.toLowerCase().startsWith('zh') ? 'zh' : 'en';
+        setLang(savedLang || browserLang);
+        renderActions(null);
+
+        if (sessionId) {
+            fetch(`/api/subscribe/session/${encodeURIComponent(sessionId)}`)
+                .then((response) => response.json())
+                .then((result) => {
+                    if (!result.success || !result.data) {
+                        return;
+                    }
+                    if (result.data.language === 'zh' || result.data.language === 'en') {
+                        setLang(result.data.language);
+                    }
+                    currentAudience = result.data.audienceProfile === 'chinese-community' ? 'chinese-community' : 'general';
+                    applyAudienceNarrative();
+                    window.sessionData = result.data;
+                    renderActions(result.data);
+                })
+                .catch(() => { });
+        }
+    </script>
+</body>
+</html>

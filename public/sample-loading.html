@@ -1,0 +1,681 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>REscript | Preparing Your Sample</title>
+    <meta name="robots" content="noindex, nofollow">
+    <link rel="icon" href="/favicon.svg" type="image/svg+xml">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@600;700&family=Outfit:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg: #ece6dd;
+            --panel: rgba(255, 253, 248, 0.92);
+            --card: rgba(255, 255, 255, 0.84);
+            --line: rgba(32, 52, 67, 0.12);
+            --ink: #17212b;
+            --muted: #5c6775;
+            --navy: #203443;
+            --accent: #9b4a32;
+            --green: #255f55;
+            --shadow: 0 24px 60px rgba(15, 23, 42, 0.1);
+            --radius: 26px;
+        }
+
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            min-height: 100vh;
+            font-family: "Outfit", sans-serif;
+            color: var(--ink);
+            background:
+                radial-gradient(circle at top left, rgba(155, 74, 50, 0.12), transparent 28%),
+                radial-gradient(circle at bottom right, rgba(32, 52, 67, 0.12), transparent 26%),
+                var(--bg);
+        }
+
+        .shell {
+            min-height: 100vh;
+            display: grid;
+            place-items: center;
+            padding: 24px;
+        }
+
+        .panel {
+            width: min(960px, 100%);
+            padding: 28px;
+            border-radius: 32px;
+            background: var(--panel);
+            border: 1px solid var(--line);
+            box-shadow: var(--shadow);
+        }
+
+        .brand {
+            display: inline-flex;
+            align-items: center;
+            gap: 12px;
+            text-decoration: none;
+            color: inherit;
+            margin-bottom: 22px;
+        }
+
+        .brand-mark {
+            width: 44px;
+            height: 44px;
+            border-radius: 14px;
+            display: grid;
+            place-items: center;
+            background: linear-gradient(135deg, var(--navy), var(--accent));
+            color: white;
+            font-weight: 700;
+            font-size: 22px;
+        }
+
+        .layout {
+            display: grid;
+            grid-template-columns: minmax(0, 1.08fr) minmax(320px, 380px);
+            gap: 20px;
+        }
+
+        .hero {
+            padding: 14px 6px 6px;
+        }
+
+        .eyebrow {
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            padding: 10px 14px;
+            border-radius: 999px;
+            background: rgba(255, 255, 255, 0.74);
+            border: 1px solid var(--line);
+            color: var(--navy);
+            font-size: 12px;
+            font-weight: 700;
+            letter-spacing: 0.12em;
+            text-transform: uppercase;
+        }
+
+        .eyebrow::before {
+            content: "";
+            width: 8px;
+            height: 8px;
+            border-radius: 999px;
+            background: var(--accent);
+            box-shadow: 0 0 0 7px rgba(155, 74, 50, 0.08);
+        }
+
+        h1 {
+            margin: 18px 0 10px;
+            font-family: "Outfit", sans-serif;
+            font-size: clamp(2.4rem, 4.4vw, 4.1rem);
+            font-weight: 700;
+            line-height: 1.02;
+            letter-spacing: -0.04em;
+            max-width: 560px;
+        }
+
+        .accent {
+            color: var(--accent);
+        }
+
+        .copy {
+            margin: 0;
+            max-width: 560px;
+            color: var(--muted);
+            font-size: 1.02rem;
+            line-height: 1.8;
+        }
+
+        .phase-grid {
+            margin-top: 26px;
+            display: grid;
+            gap: 12px;
+        }
+
+        .phase {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+            padding: 16px 18px;
+            border-radius: 18px;
+            background: rgba(255, 255, 255, 0.72);
+            border: 1px solid transparent;
+            transition: transform 0.25s ease, border-color 0.25s ease, background 0.25s ease;
+        }
+
+        .phase.active {
+            transform: translateX(6px);
+            border-color: rgba(155, 74, 50, 0.24);
+            background: rgba(255, 255, 255, 0.94);
+        }
+
+        .phase.done {
+            border-color: rgba(37, 95, 85, 0.22);
+        }
+
+        .phase-bullet {
+            width: 18px;
+            height: 18px;
+            border-radius: 999px;
+            border: 2px solid rgba(32, 52, 67, 0.18);
+            position: relative;
+            flex: 0 0 auto;
+        }
+
+        .phase.active .phase-bullet::after {
+            content: "";
+            position: absolute;
+            inset: 3px;
+            border-radius: 999px;
+            background: var(--accent);
+        }
+
+        .phase.done .phase-bullet {
+            border-color: rgba(37, 95, 85, 0.28);
+            background: rgba(37, 95, 85, 0.14);
+        }
+
+        .phase.done .phase-bullet::after {
+            content: "";
+            position: absolute;
+            inset: 4px;
+            border-radius: 999px;
+            background: var(--green);
+        }
+
+        .phase-title {
+            font-size: 1rem;
+            font-weight: 600;
+            color: var(--ink);
+        }
+
+        .phase-copy {
+            margin-top: 4px;
+            color: var(--muted);
+            font-size: 0.92rem;
+            line-height: 1.6;
+        }
+
+        .status {
+            margin-top: 18px;
+            padding: 16px 18px;
+            border-radius: 18px;
+            background: rgba(37, 95, 85, 0.08);
+            border: 1px solid rgba(37, 95, 85, 0.14);
+            color: var(--green);
+            font-size: 0.95rem;
+            line-height: 1.7;
+            min-height: 88px;
+        }
+
+        .aside {
+            padding: 22px;
+            border-radius: var(--radius);
+            background: linear-gradient(180deg, rgba(255, 255, 255, 0.9), rgba(248, 242, 235, 0.95));
+            border: 1px solid var(--line);
+        }
+
+        .aside-kicker {
+            font-size: 12px;
+            letter-spacing: 0.14em;
+            text-transform: uppercase;
+            color: var(--muted);
+        }
+
+        .aside-title {
+            margin: 12px 0 16px;
+            font-family: "Cormorant Garamond", serif;
+            font-size: 2rem;
+            line-height: 0.98;
+        }
+
+        .summary {
+            display: grid;
+            gap: 10px;
+        }
+
+        .summary-card {
+            padding: 14px 16px;
+            border-radius: 16px;
+            background: var(--card);
+            border: 1px solid var(--line);
+        }
+
+        .summary-label {
+            font-size: 11px;
+            letter-spacing: 0.12em;
+            text-transform: uppercase;
+            color: var(--muted);
+            margin-bottom: 6px;
+        }
+
+        .summary-value {
+            font-size: 1rem;
+            font-weight: 600;
+            color: var(--ink);
+        }
+
+        .aside-note {
+            margin-top: 16px;
+            color: var(--muted);
+            font-size: 0.92rem;
+            line-height: 1.75;
+        }
+
+        .actions {
+            margin-top: 18px;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+
+        .button {
+            display: inline-flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 48px;
+            padding: 0 18px;
+            border-radius: 999px;
+            text-decoration: none;
+            font: inherit;
+            font-weight: 700;
+            border: 1px solid transparent;
+            cursor: pointer;
+        }
+
+        .button-primary {
+            background: linear-gradient(135deg, var(--navy), #35566e);
+            color: white;
+        }
+
+        .button-secondary {
+            background: rgba(255, 255, 255, 0.84);
+            border-color: var(--line);
+            color: var(--ink);
+        }
+
+        .button[hidden] {
+            display: none;
+        }
+
+        .error {
+            color: #8a2d26;
+            background: rgba(138, 45, 38, 0.08);
+            border-color: rgba(138, 45, 38, 0.16);
+        }
+
+        @media (max-width: 860px) {
+            .layout {
+                grid-template-columns: 1fr;
+            }
+
+            .panel {
+                padding: 18px;
+                border-radius: 26px;
+            }
+
+            h1 {
+                font-size: 2.7rem;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <div class="shell">
+        <main class="panel">
+            <a class="brand" href="/subscribe.html">
+                <span class="brand-mark">R</span>
+                <span id="brandText">REscript · agent content desk</span>
+            </a>
+
+            <div class="layout">
+                <section class="hero">
+                    <div class="eyebrow" id="eyebrow">Generating your sample</div>
+                    <h1 id="title">Building your <span class="accent">private viewer</span>.</h1>
+                    <p class="copy" id="intro">We are checking today's market package, preparing the sample, and getting your private link ready.</p>
+
+                    <div class="phase-grid">
+                        <div class="phase active" id="phase0">
+                            <div class="phase-bullet"></div>
+                            <div>
+                                <div class="phase-title" id="phaseTitle0">Checking today's market package</div>
+                                <div class="phase-copy" id="phaseCopy0">If a matching package already exists, we reuse it so you can open faster.</div>
+                            </div>
+                        </div>
+                        <div class="phase" id="phase1">
+                            <div class="phase-bullet"></div>
+                            <div>
+                                <div class="phase-title" id="phaseTitle1">Generating local scripts</div>
+                                <div class="phase-copy" id="phaseCopy1">If there is no fresh match yet, we generate one local news topic and evergreen modules for your chosen lens.</div>
+                            </div>
+                        </div>
+                        <div class="phase" id="phase2">
+                            <div class="phase-bullet"></div>
+                            <div>
+                                <div class="phase-title" id="phaseTitle2">Preparing your private access link</div>
+                                <div class="phase-copy" id="phaseCopy2">The same viewer link is opened in this tab and sent to your inbox for later review.</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="status" id="statusBox">Starting your live sample...</div>
+                    <div class="actions">
+                        <button class="button button-primary" id="checkoutButton" hidden type="button">Start paid delivery</button>
+                        <a class="button button-secondary" id="backButton" href="/subscribe.html">Back</a>
+                    </div>
+                </section>
+
+                <aside class="aside">
+                    <div class="aside-kicker" id="asideKicker">Sample request</div>
+                    <div class="aside-title" id="asideTitle">This is the package we are preparing.</div>
+                    <div class="summary">
+                        <div class="summary-card">
+                            <div class="summary-label" id="marketLabel">Market</div>
+                            <div class="summary-value" id="marketValue">-</div>
+                        </div>
+                        <div class="summary-card">
+                            <div class="summary-label" id="languageLabel">Delivery language</div>
+                            <div class="summary-value" id="languageValue">-</div>
+                        </div>
+                        <div class="summary-card">
+                            <div class="summary-label" id="audienceLabel">Audience focus</div>
+                            <div class="summary-value" id="audienceValue">-</div>
+                        </div>
+                    </div>
+                    <p class="aside-note" id="asideNote">As usage grows, the same market-language-audience combination will usually already exist for the day, which means this page becomes a near-instant handoff instead of a fresh generation.</p>
+                </aside>
+            </div>
+        </main>
+    </div>
+
+    <script>
+        const SAMPLE_REQUEST_STORAGE_KEY = 'rescript-sample-request';
+        const translations = {
+            en: {
+                title: 'REscript | Preparing Your Sample',
+                brandText: 'REscript · agent content desk',
+                eyebrow: 'Generating your sample',
+                heading: 'Building your <span class="accent">private viewer</span>.',
+                intro: 'We are checking today\'s market package, preparing the sample, and getting your private link ready.',
+                phaseTitle0: 'Checking today\'s market package',
+                phaseCopy0: 'If a matching package already exists, we reuse it so you can open faster.',
+                phaseTitle1: 'Generating local scripts',
+                phaseCopy1: 'If there is no fresh match yet, we generate one local news topic and evergreen modules for your chosen lens.',
+                phaseTitle2: 'Preparing your private access link',
+                phaseCopy2: 'The same viewer link is opened in this tab and sent to your inbox for later review.',
+                statusStarting: 'Starting your live sample...',
+                statusWorking: 'Your sample is being prepared. Keep this tab open.',
+                statusSuccess: 'Your sample is ready. Opening the private viewer now.',
+                statusFallback: 'Your package is ready. Email delivery is delayed, but the viewer can open immediately.',
+                statusUsed: 'Your free sample has already been used. You can continue to paid delivery below.',
+                statusSubscriber: 'You are already subscribed. We can open your paid delivery flow below.',
+                statusMissing: 'This page needs a sample request from the landing page first.',
+                statusError: 'We could not prepare the sample right now.',
+                asideKicker: 'Sample request',
+                asideTitle: 'This is the package we are preparing.',
+                marketLabel: 'Market',
+                languageLabel: 'Delivery language',
+                audienceLabel: 'Audience focus',
+                asideNote: 'As usage grows, the same market-language-audience combination will usually already exist for the day, which means this page becomes a near-instant handoff instead of a fresh generation.',
+                market: {
+                    'new-york': 'New York',
+                    'long-island': 'Long Island',
+                    'los-angeles': 'Los Angeles',
+                    'san-francisco': 'San Francisco Bay Area',
+                    'chicago': 'Chicago',
+                    'miami': 'Miami',
+                    'seattle': 'Seattle',
+                    'boston': 'Boston',
+                    'houston': 'Houston',
+                },
+                language: {
+                    en: 'English delivery',
+                    zh: 'Chinese delivery',
+                },
+                audience: {
+                    general: 'General North American audience',
+                    'chinese-community': 'Chinese-speaking / relocation audience',
+                },
+                checkoutButton: 'Start paid delivery',
+                backButton: 'Back',
+            },
+            zh: {
+                title: 'REscript | 正在准备你的 Sample',
+                brandText: 'REscript · 地产经纪人内容工作台',
+                eyebrow: '正在生成你的 sample',
+                heading: '正在构建你的<span class="accent">私有 viewer</span>。',
+                intro: '我们会先检查今天是否已有匹配内容，再决定复用还是现生成，并准备好你的私有链接。',
+                phaseTitle0: '检查今天是否已有匹配内容',
+                phaseCopy0: '如果今天已经生成过同样的市场、语言和受众组合，我们会优先复用，打开更快。',
+                phaseTitle1: '生成本地脚本',
+                phaseCopy1: '如果今天还没有新鲜匹配结果，我们会现场生成 1 条本地新闻和常青模块内容。',
+                phaseTitle2: '准备私有访问链接',
+                phaseCopy2: '同一个 viewer link 会在当前页面打开，也会同步发到你的邮箱里方便后续复看。',
+                statusStarting: '正在启动你的即时 sample...',
+                statusWorking: '你的 sample 正在准备中，请保持当前页面打开。',
+                statusSuccess: '你的 sample 已经准备好，正在打开私有 viewer。',
+                statusFallback: '内容包已经准备好。邮件送达稍慢，但 viewer 会立即打开。',
+                statusUsed: '你的免费 sample 已领取过。你可以直接继续开启付费交付。',
+                statusSubscriber: '你已经是订阅用户了。我们可以直接带你进入正式交付链路。',
+                statusMissing: '这个页面需要从首页提交 sample 请求后再进入。',
+                statusError: '当前无法完成 sample 生成，请稍后再试。',
+                asideKicker: '本次请求',
+                asideTitle: '这是我们正在为你准备的内容包。',
+                marketLabel: '市场',
+                languageLabel: '交付语言',
+                audienceLabel: '受众画像',
+                asideNote: '当用户量足够大时，同一个市场 + 语言 + 受众组合通常当天已经生成过一次，这个页面就会更像“秒开交接页”，而不是每次都重新生成。',
+                market: {
+                    'new-york': '纽约',
+                    'long-island': '纽约州长岛',
+                    'los-angeles': '洛杉矶',
+                    'san-francisco': '旧金山湾区',
+                    'chicago': '芝加哥',
+                    'miami': '迈阿密',
+                    'seattle': '西雅图',
+                    'boston': '波士顿',
+                    'houston': '休斯顿',
+                },
+                language: {
+                    en: '英文交付',
+                    zh: '中文交付',
+                },
+                audience: {
+                    general: '主流北美客户受众',
+                    'chinese-community': '华语 / 搬迁家庭受众',
+                },
+                checkoutButton: '开启付费交付',
+                backButton: '返回首页',
+            },
+        };
+
+        let requestPayload = null;
+        let uiLang = 'en';
+        let phaseTimer = null;
+
+        function t(key) {
+            return translations[uiLang][key] || translations.en[key] || key;
+        }
+
+        function setText(id, value) {
+            const node = document.getElementById(id);
+            if (node) {
+                node.textContent = value;
+            }
+        }
+
+        function setHtml(id, value) {
+            const node = document.getElementById(id);
+            if (node) {
+                node.innerHTML = value;
+            }
+        }
+
+        function setStatus(text, type) {
+            const box = document.getElementById('statusBox');
+            box.className = type === 'error' ? 'status error' : 'status';
+            box.textContent = text;
+        }
+
+        function setPhaseState(activeIndex, completeUntil) {
+            for (let i = 0; i < 3; i += 1) {
+                const node = document.getElementById(`phase${i}`);
+                node.classList.toggle('active', i === activeIndex);
+                node.classList.toggle('done', i < completeUntil);
+            }
+        }
+
+        function renderRequestSummary() {
+            setText('marketValue', t('market')[requestPayload.market] || requestPayload.market);
+            setText('languageValue', t('language')[requestPayload.language] || requestPayload.language);
+            setText('audienceValue', t('audience')[requestPayload.audienceProfile] || requestPayload.audienceProfile);
+        }
+
+        function applyLanguage() {
+            document.documentElement.lang = uiLang === 'zh' ? 'zh-CN' : 'en';
+            document.title = t('title');
+            setText('brandText', t('brandText'));
+            setText('eyebrow', t('eyebrow'));
+            setHtml('title', t('heading'));
+            setText('intro', t('intro'));
+            setText('phaseTitle0', t('phaseTitle0'));
+            setText('phaseCopy0', t('phaseCopy0'));
+            setText('phaseTitle1', t('phaseTitle1'));
+            setText('phaseCopy1', t('phaseCopy1'));
+            setText('phaseTitle2', t('phaseTitle2'));
+            setText('phaseCopy2', t('phaseCopy2'));
+            setText('asideKicker', t('asideKicker'));
+            setText('asideTitle', t('asideTitle'));
+            setText('marketLabel', t('marketLabel'));
+            setText('languageLabel', t('languageLabel'));
+            setText('audienceLabel', t('audienceLabel'));
+            setText('asideNote', t('asideNote'));
+            setText('checkoutButton', t('checkoutButton'));
+            setText('backButton', t('backButton'));
+        }
+
+        function getStoredRequest() {
+            try {
+                const raw = sessionStorage.getItem(SAMPLE_REQUEST_STORAGE_KEY);
+                return raw ? JSON.parse(raw) : null;
+            } catch {
+                return null;
+            }
+        }
+
+        function clearStoredRequest() {
+            try {
+                sessionStorage.removeItem(SAMPLE_REQUEST_STORAGE_KEY);
+            } catch {
+                // Ignore storage errors on cleanup.
+            }
+        }
+
+        async function continueToCheckout() {
+            const button = document.getElementById('checkoutButton');
+            button.disabled = true;
+            try {
+                const res = await fetch('/api/subscribe/checkout', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        email: requestPayload.email,
+                        language: requestPayload.language,
+                        market: requestPayload.market,
+                        audienceProfile: requestPayload.audienceProfile,
+                    }),
+                });
+                const data = await res.json();
+                if (!data.success || !data.url) {
+                    throw new Error(data.error || t('statusError'));
+                }
+                window.location.href = data.url;
+            } catch (error) {
+                setStatus(error.message || t('statusError'), 'error');
+                button.disabled = false;
+            }
+        }
+
+        async function runSampleFlow() {
+            setStatus(t('statusWorking'));
+            setPhaseState(0, 0);
+
+            let phaseIndex = 0;
+            phaseTimer = window.setInterval(() => {
+                phaseIndex = Math.min(phaseIndex + 1, 2);
+                setPhaseState(phaseIndex, phaseIndex);
+            }, 1400);
+
+            try {
+                const res = await fetch('/api/subscribe/sample', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        email: requestPayload.email,
+                        language: requestPayload.language,
+                        market: requestPayload.market,
+                        audienceProfile: requestPayload.audienceProfile,
+                    }),
+                });
+                const data = await res.json();
+                if (!data.success) {
+                    throw new Error(data.error || t('statusError'));
+                }
+
+                window.clearInterval(phaseTimer);
+                setPhaseState(2, 3);
+
+                if (data.viewUrl) {
+                    setStatus(data.status === 'sample_view_ready' ? t('statusFallback') : t('statusSuccess'));
+                    clearStoredRequest();
+                    window.setTimeout(() => {
+                        window.location.href = data.viewUrl;
+                    }, 900);
+                    return;
+                }
+
+                if (data.status === 'sample_used' || data.status === 'subscriber') {
+                    setStatus(data.status === 'subscriber' ? t('statusSubscriber') : t('statusUsed'));
+                    document.getElementById('checkoutButton').hidden = false;
+                    return;
+                }
+
+                throw new Error(data.message || t('statusError'));
+            } catch (error) {
+                window.clearInterval(phaseTimer);
+                setPhaseState(0, 0);
+                setStatus(error.message || t('statusError'), 'error');
+            }
+        }
+
+        (function init() {
+            requestPayload = getStoredRequest();
+            const urlLang = new URLSearchParams(window.location.search).get('lang');
+            uiLang = urlLang === 'zh'
+                ? 'zh'
+                : (requestPayload?.uiLang === 'zh' ? 'zh' : 'en');
+
+            applyLanguage();
+
+            document.getElementById('checkoutButton').addEventListener('click', continueToCheckout);
+
+            if (!requestPayload) {
+                setStatus(t('statusMissing'), 'error');
+                return;
+            }
+
+            renderRequestSummary();
+            runSampleFlow();
+        }());
+    </script>
+</body>
+
+</html>

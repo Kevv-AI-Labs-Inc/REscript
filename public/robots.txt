@@ -1,0 +1,33 @@
+User-agent: *
+Allow: /
+Disallow: /admin.html
+Disallow: /manage.html
+Disallow: /success.html
+Disallow: /view.html
+Disallow: /api/
+
+User-agent: GPTBot
+Allow: /
+Disallow: /admin.html
+Disallow: /manage.html
+Disallow: /success.html
+Disallow: /view.html
+Disallow: /api/
+
+User-agent: ClaudeBot
+Allow: /
+Disallow: /admin.html
+Disallow: /manage.html
+Disallow: /success.html
+Disallow: /view.html
+Disallow: /api/
+
+User-agent: PerplexityBot
+Allow: /
+Disallow: /admin.html
+Disallow: /manage.html
+Disallow: /success.html
+Disallow: /view.html
+Disallow: /api/
+
+Sitemap: https://rescript.kevv.ai/sitemap.xml

@@ -1,0 +1,51 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 630" role="img" aria-label="REscript social share cover">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#132231"/>
+      <stop offset="55%" stop-color="#203443"/>
+      <stop offset="100%" stop-color="#9b4a32"/>
+    </linearGradient>
+    <radialGradient id="glow" cx="1" cy="0" r="1.1">
+      <stop offset="0%" stop-color="#f59e0b" stop-opacity="0.35"/>
+      <stop offset="100%" stop-color="#f59e0b" stop-opacity="0"/>
+    </radialGradient>
+  </defs>
+
+  <rect width="1200" height="630" fill="url(#bg)"/>
+  <rect width="1200" height="630" fill="url(#glow)"/>
+
+  <g transform="translate(110 142)">
+    <rect width="104" height="104" rx="24" fill="rgba(255,255,255,0.12)" stroke="rgba(255,255,255,0.18)"/>
+    <path d="M28 22v60" stroke="#fff" stroke-width="12" stroke-linecap="round"/>
+    <path d="M42 52L70 24" stroke="#fff" stroke-width="12" stroke-linecap="round"/>
+    <path d="M42 52L70 80" stroke="#fff" stroke-width="12" stroke-linecap="round"/>
+    <rect x="78" y="34" width="8" height="36" rx="4" fill="#fff"/>
+    <rect x="91" y="42" width="5" height="20" rx="2.5" fill="#fff" opacity="0.78"/>
+  </g>
+
+  <text x="240" y="212" fill="#f5f7fa" font-family="Outfit, IBM Plex Sans, Arial, sans-serif" font-size="66" font-weight="700" letter-spacing="-1">
+    REscript
+  </text>
+  <text x="110" y="300" fill="#f8fafc" font-family="Outfit, IBM Plex Sans, Arial, sans-serif" font-size="60" font-weight="700" letter-spacing="-0.7">
+    Daily Real Estate Video Scripts
+  </text>
+  <text x="110" y="362" fill="#f8fafc" font-family="Outfit, IBM Plex Sans, Arial, sans-serif" font-size="60" font-weight="700" letter-spacing="-0.7">
+    for North American Agents
+  </text>
+  <text x="112" y="432" fill="rgba(255,255,255,0.86)" font-family="IBM Plex Sans, Arial, sans-serif" font-size="30">
+    Market-specific • Bilingual • Private viewer links • US$9.90 / month
+  </text>
+
+  <g transform="translate(110 486)">
+    <rect width="171" height="52" rx="26" fill="rgba(255,255,255,0.14)" stroke="rgba(255,255,255,0.28)"/>
+    <text x="26" y="34" fill="#fff" font-family="IBM Plex Sans, Arial, sans-serif" font-size="24" font-weight="600">New York</text>
+    <rect x="190" width="214" height="52" rx="26" fill="rgba(255,255,255,0.14)" stroke="rgba(255,255,255,0.28)"/>
+    <text x="218" y="34" fill="#fff" font-family="IBM Plex Sans, Arial, sans-serif" font-size="24" font-weight="600">Los Angeles</text>
+    <rect x="423" width="286" height="52" rx="26" fill="rgba(255,255,255,0.14)" stroke="rgba(255,255,255,0.28)"/>
+    <text x="451" y="34" fill="#fff" font-family="IBM Plex Sans, Arial, sans-serif" font-size="24" font-weight="600">San Francisco Bay</text>
+    <rect x="728" width="165" height="52" rx="26" fill="rgba(255,255,255,0.14)" stroke="rgba(255,255,255,0.28)"/>
+    <text x="758" y="34" fill="#fff" font-family="IBM Plex Sans, Arial, sans-serif" font-size="24" font-weight="600">Chicago</text>
+    <rect x="912" width="116" height="52" rx="26" fill="rgba(255,255,255,0.14)" stroke="rgba(255,255,255,0.28)"/>
+    <text x="944" y="34" fill="#fff" font-family="IBM Plex Sans, Arial, sans-serif" font-size="24" font-weight="600">+4</text>
+  </g>
+</svg>

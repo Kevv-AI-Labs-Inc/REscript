@@ -1,0 +1,16 @@
+{
+  "name": "REscript",
+  "short_name": "REscript",
+  "description": "Daily real estate video scripts for North American agents.",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#132231",
+  "theme_color": "#203443",
+  "icons": [
+    {
+      "src": "/favicon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml"
+    }
+  ]
+}

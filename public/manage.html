@@ -1,0 +1,788 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Manage Subscription · REscript</title>
+    <meta name="robots" content="noindex, nofollow, noarchive, nosnippet">
+    <meta name="googlebot" content="noindex, nofollow, noarchive, nosnippet">
+    <meta name="theme-color" content="#203443">
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg">
+    <link rel="apple-touch-icon" href="/favicon.svg">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@500;600;700&family=IBM+Plex+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --ink: #15212b;
+            --muted: #5b6775;
+            --line: rgba(21, 33, 43, 0.12);
+            --accent: #9b4a32;
+            --navy: #203443;
+            --green: #24483c;
+            --danger: #8a2d26;
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+
+        body {
+            font-family: "IBM Plex Sans", sans-serif;
+            min-height: 100vh;
+            padding: 24px;
+            color: var(--ink);
+            background:
+                radial-gradient(circle at top left, rgba(155, 74, 50, 0.10), transparent 24%),
+                radial-gradient(circle at top right, rgba(32, 52, 67, 0.10), transparent 26%),
+                linear-gradient(180deg, #f9f3e8 0%, #f1ecdf 100%);
+        }
+
+        .card {
+            position: relative;
+            width: min(100%, 820px);
+            margin: 0 auto;
+            padding: 34px;
+            border-radius: 30px;
+            border: 1px solid var(--line);
+            background: rgba(255, 252, 247, 0.9);
+            box-shadow: 0 30px 80px rgba(21, 33, 43, 0.10);
+        }
+
+        .lang-toggle {
+            position: absolute;
+            top: 24px;
+            right: 24px;
+            min-height: 42px;
+            padding: 0 16px;
+            border-radius: 999px;
+            border: 1px solid var(--line);
+            background: rgba(255,255,255,0.88);
+            color: var(--ink);
+            font: inherit;
+            font-weight: 600;
+            cursor: pointer;
+        }
+
+        .eyebrow {
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            padding: 9px 14px;
+            border-radius: 999px;
+            border: 1px solid var(--line);
+            color: var(--accent);
+            font-size: 12px;
+            letter-spacing: 0.14em;
+            text-transform: uppercase;
+            margin-bottom: 18px;
+        }
+
+        .eyebrow::before {
+            content: "";
+            width: 8px;
+            height: 8px;
+            border-radius: 999px;
+            background: var(--accent);
+        }
+
+        h1 {
+            font-family: "Cormorant Garamond", serif;
+            font-size: clamp(2.6rem, 7vw, 4.3rem);
+            line-height: 1.05;
+            margin-bottom: 14px;
+        }
+
+        p {
+            color: var(--muted);
+            line-height: 1.8;
+        }
+
+        .status-row {
+            margin-top: 20px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            flex-wrap: wrap;
+        }
+
+        .status-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 10px 14px;
+            border-radius: 999px;
+            font-size: 13px;
+            font-weight: 700;
+            letter-spacing: 0.06em;
+            text-transform: uppercase;
+        }
+
+        .status-badge.active {
+            background: rgba(36, 72, 60, 0.08);
+            color: var(--green);
+            border: 1px solid rgba(36, 72, 60, 0.18);
+        }
+
+        .status-badge.paused {
+            background: rgba(138, 45, 38, 0.08);
+            color: var(--danger);
+            border: 1px solid rgba(138, 45, 38, 0.18);
+        }
+
+        .status-badge.invalid {
+            background: rgba(91, 103, 117, 0.08);
+            color: var(--muted);
+            border: 1px solid rgba(91, 103, 117, 0.18);
+        }
+
+        .grid {
+            display: grid;
+            grid-template-columns: minmax(0, 1.15fr) minmax(280px, 320px);
+            gap: 18px;
+            margin-top: 28px;
+        }
+
+        .panel {
+            padding: 24px;
+            border-radius: 22px;
+            border: 1px solid var(--line);
+            background: rgba(255,255,255,0.72);
+        }
+
+        .panel h2 {
+            font-family: "Cormorant Garamond", serif;
+            font-size: 2rem;
+            margin-bottom: 10px;
+        }
+
+        .detail-list {
+            margin-top: 16px;
+            display: grid;
+            gap: 12px;
+        }
+
+        .detail {
+            display: flex;
+            justify-content: space-between;
+            gap: 16px;
+            align-items: flex-start;
+            padding: 14px 0;
+            border-bottom: 1px solid var(--line);
+        }
+
+        .detail:last-child { border-bottom: none; }
+
+        .detail-label {
+            color: var(--muted);
+            font-size: 0.92rem;
+        }
+
+        .detail-value {
+            font-weight: 600;
+            text-align: right;
+            max-width: 62%;
+            overflow-wrap: anywhere;
+        }
+
+        .actions {
+            display: grid;
+            gap: 12px;
+            margin-top: 18px;
+        }
+
+        button,
+        a.button {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            min-height: 50px;
+            padding: 0 18px;
+            border-radius: 16px;
+            border: 1px solid transparent;
+            background: var(--navy);
+            color: white;
+            text-decoration: none;
+            font: inherit;
+            font-weight: 600;
+            cursor: pointer;
+        }
+
+        button.secondary,
+        a.button.secondary {
+            background: white;
+            color: var(--ink);
+            border-color: var(--line);
+        }
+
+        button.danger {
+            background: rgba(138, 45, 38, 0.12);
+            color: var(--danger);
+            border-color: rgba(138, 45, 38, 0.16);
+        }
+
+        .message {
+            margin-top: 18px;
+            padding: 14px 16px;
+            border-radius: 16px;
+            display: none;
+            line-height: 1.7;
+        }
+
+        .message.success {
+            display: block;
+            background: rgba(36, 72, 60, 0.08);
+            color: var(--green);
+            border: 1px solid rgba(36, 72, 60, 0.16);
+        }
+
+        .message.error {
+            display: block;
+            background: rgba(138, 45, 38, 0.08);
+            color: var(--danger);
+            border: 1px solid rgba(138, 45, 38, 0.16);
+        }
+
+        .helper {
+            margin-top: 14px;
+            font-size: 0.92rem;
+            color: var(--muted);
+            line-height: 1.8;
+        }
+
+        .prefs-box {
+            margin-top: 18px;
+            display: grid;
+            gap: 14px;
+        }
+
+        .prefs-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(170px, 1fr));
+            gap: 12px;
+        }
+
+        .prefs-grid .field:last-child {
+            grid-column: 1 / -1;
+        }
+
+        .field {
+            display: grid;
+            gap: 8px;
+            min-width: 0;
+        }
+
+        .field span {
+            font-size: 0.88rem;
+            color: var(--muted);
+        }
+
+        .field select {
+            width: 100%;
+            min-width: 0;
+            min-height: 46px;
+            padding: 0 12px;
+            border-radius: 14px;
+            border: 1px solid var(--line);
+            background: rgba(255,255,255,0.94);
+            color: var(--ink);
+            font: inherit;
+        }
+
+        @media (max-width: 1024px) {
+            .grid { grid-template-columns: 1fr; }
+        }
+
+        @media (max-width: 860px) {
+            .prefs-grid { grid-template-columns: 1fr; }
+        }
+
+        @media (max-width: 760px) {
+            body {
+                padding: 12px;
+            }
+
+            .card {
+                padding: 20px;
+                border-radius: 22px;
+            }
+
+            .lang-toggle {
+                position: static;
+                margin-left: auto;
+                margin-bottom: 12px;
+                display: inline-flex;
+            }
+
+            h1 {
+                font-size: clamp(2rem, 10vw, 2.9rem);
+            }
+
+            .panel {
+                padding: 18px;
+                border-radius: 16px;
+            }
+
+            .detail {
+                display: grid;
+                grid-template-columns: 1fr;
+                gap: 6px;
+            }
+
+            .detail-value {
+                max-width: 100%;
+                text-align: left;
+            }
+
+            .actions button,
+            .actions .button {
+                width: 100%;
+            }
+        }
+    </style>
+</head>
+<body>
+    <main class="card">
+        <button class="lang-toggle" id="langToggle" onclick="toggleLang()">中文</button>
+        <div class="eyebrow" id="eyebrow">Subscriber controls</div>
+        <h1 id="pageTitle">Manage delivery without opening a support ticket.</h1>
+        <p id="pageCopy">
+            This page is tied to your private REscript access link. Use it to pause or resume daily delivery, and if you are on a paid plan, open the Stripe billing portal from the same control surface.
+        </p>
+
+        <div class="status-row">
+            <div id="statusBadge" class="status-badge invalid">Loading access link</div>
+        </div>
+
+        <div class="grid">
+            <section class="panel">
+                <h2 id="detailsTitle">Subscription details</h2>
+                <p id="detailsCopy">We use this information to match your delivery to the market, language, and audience profile tied to your account.</p>
+                <div class="detail-list" id="metaBox" style="display:none;">
+                    <div class="detail"><span class="detail-label" id="emailLabel">Email</span><span class="detail-value" id="emailValue"></span></div>
+                    <div class="detail"><span class="detail-label" id="planLabel">Plan</span><span class="detail-value" id="planValue"></span></div>
+                    <div class="detail"><span class="detail-label" id="languageLabel">Delivery language</span><span class="detail-value" id="languageValue"></span></div>
+                    <div class="detail"><span class="detail-label" id="marketLabel">Primary market</span><span class="detail-value" id="marketValue"></span></div>
+                    <div class="detail"><span class="detail-label" id="audienceLabel">Audience focus</span><span class="detail-value" id="audienceValue"></span></div>
+                </div>
+                <div class="prefs-box" id="prefsBox" style="display:none;">
+                    <p id="prefsCopy">Update these preferences if you want future deliveries to follow a different market, delivery language, or audience focus.</p>
+                    <div class="prefs-grid">
+                        <label class="field">
+                            <span id="prefLanguageLabel">Delivery language</span>
+                            <select id="prefLanguage"></select>
+                        </label>
+                        <label class="field">
+                            <span id="prefMarketLabel">Primary market</span>
+                            <select id="prefMarket"></select>
+                        </label>
+                        <label class="field">
+                            <span id="prefAudienceLabel">Audience focus</span>
+                            <select id="prefAudience"></select>
+                        </label>
+                    </div>
+                    <button class="secondary" id="savePrefsBtn" onclick="savePreferences()">Save preferences</button>
+                </div>
+            </section>
+
+            <aside class="panel">
+                <h2 id="actionsTitle">Actions</h2>
+                <p id="actionsCopy">Use these controls to pause delivery, resume delivery, or open billing.</p>
+                <div class="actions">
+                    <button id="pauseBtn" class="danger" onclick="unsubscribe()">Pause delivery</button>
+                    <button id="resumeBtn" class="secondary" onclick="resubscribe()">Resume delivery</button>
+                    <button id="billingBtn" class="secondary" onclick="openBilling()">Open Stripe billing</button>
+                    <a class="button secondary" href="/" id="homeLink">Back to home</a>
+                </div>
+                <p class="helper" id="helperCopy">
+                    Pausing delivery stops the daily email. It does not automatically cancel billing unless you manage the plan inside Stripe.
+                </p>
+            </aside>
+        </div>
+
+        <div id="message" class="message"></div>
+    </main>
+
+    <script>
+        const copy = {
+            en: {
+                title: 'Manage Subscription · REscript',
+                toggle: '中文',
+                eyebrow: 'Subscriber controls',
+                pageTitle: 'Manage delivery without opening a support ticket.',
+                pageCopy: 'This page is tied to your private REscript access link. Use it to pause or resume daily delivery, and if you are on a paid plan, open the Stripe billing portal from the same control surface.',
+                detailsTitle: 'Subscription details',
+                detailsCopy: 'We use this information to match your delivery to the market, language, and audience profile tied to your account.',
+                emailLabel: 'Email',
+                planLabel: 'Plan',
+                languageLabel: 'Delivery language',
+                marketLabel: 'Primary market',
+                audienceLabel: 'Audience focus',
+                prefsCopy: 'Update these preferences if you want future deliveries to follow a different market, delivery language, or audience focus.',
+                prefLanguageLabel: 'Delivery language',
+                prefMarketLabel: 'Primary market',
+                prefAudienceLabel: 'Audience focus',
+                actionsTitle: 'Actions',
+                actionsCopy: 'Use these controls to pause delivery, resume delivery, or open billing.',
+                savePrefsBtn: 'Save preferences',
+                pauseBtn: 'Pause delivery',
+                resumeBtn: 'Resume delivery',
+                billingBtn: 'Open Stripe billing',
+                homeLink: 'Back to home',
+                helperCopy: 'Pausing delivery stops the daily email. It does not automatically cancel billing unless you manage the plan inside Stripe.',
+                statusLoading: 'Loading access link',
+                statusInvalid: 'Invalid access link',
+                statusActive: 'Delivery active',
+                statusPaused: 'Delivery paused',
+                invalidLink: 'This manage link is missing a token or has already expired.',
+                loadError: 'Unable to load this manage page.',
+                pauseError: 'Unable to pause delivery.',
+                pauseSuccess: 'Delivery is paused. You will stop receiving the daily brief until you resume it.',
+                resumeError: 'Unable to resume delivery.',
+                resumeSuccess: 'Delivery is active again.',
+                savePrefsError: 'Unable to update preferences.',
+                savePrefsSuccess: 'Delivery preferences updated. Future runs will follow the new market, language, and audience settings.',
+                billingError: 'Unable to open the billing portal.',
+                genericLoadError: 'Unable to load your manage page.',
+                audienceTone: {
+                    general: {
+                        pageCopy: 'This page is tied to your private REscript access link. Use it to manage a mainstream North American delivery workflow for buyer-seller education, market commentary, and agent-brand content.',
+                        detailsCopy: 'These settings keep your market-desk delivery aligned to the market, language, and general North American audience profile attached to your account.',
+                        prefsCopy: 'Update these preferences if you want future deliveries to shift between markets, languages, or audience lenses for the clients you actually serve.',
+                        actionsCopy: 'Use these controls to pause delivery, resume delivery, or open billing while keeping your mainstream market workflow in sync.',
+                        helperCopy: 'Pausing delivery stops the daily email. It does not automatically cancel billing unless you manage the plan inside Stripe.',
+                        savePrefsSuccess: 'Delivery preferences updated. Future runs will follow the new market, language, and mainstream audience settings.',
+                    },
+                    'chinese-community': {
+                        pageCopy: 'This page is tied to your private REscript access link. Use it to manage a bilingual community-delivery workflow for Chinese-speaking households, relocation content, and trust-building education.',
+                        detailsCopy: 'These settings keep your community-desk delivery aligned to the market, language, and Chinese-speaking / relocation audience profile attached to your account.',
+                        prefsCopy: 'Update these preferences if you want future deliveries to shift between markets, languages, or audience lenses as your bilingual and relocation mix changes.',
+                        actionsCopy: 'Use these controls to pause delivery, resume delivery, or open billing while keeping your bilingual community workflow in sync.',
+                        helperCopy: 'Pausing delivery stops the daily email. It does not automatically cancel billing unless you manage the plan inside Stripe. If your audience mix changes, update the audience focus here before the next run.',
+                        savePrefsSuccess: 'Delivery preferences updated. Future runs will follow the new market, language, and community-oriented audience settings.',
+                    },
+                },
+                plan: { free: 'Free', subscriber: 'Paid', vip: 'VIP' },
+                language: { en: 'English', zh: 'Chinese' },
+                audience: {
+                    general: 'General North American audience',
+                    'chinese-community': 'Chinese-speaking / relocation audience',
+                },
+                market: {
+                    'new-york': 'New York',
+                    'long-island': 'Long Island',
+                    'los-angeles': 'Los Angeles',
+                    'san-francisco': 'San Francisco Bay Area',
+                    'chicago': 'Chicago',
+                    'miami': 'Miami',
+                    'seattle': 'Seattle',
+                    'boston': 'Boston',
+                    'houston': 'Houston',
+                },
+            },
+            zh: {
+                title: '管理订阅 · REscript',
+                toggle: 'EN',
+                eyebrow: '订阅控制台',
+                pageTitle: '不用发支持工单，也能直接管理交付。',
+                pageCopy: '这个页面绑定的是你的私有 REscript 访问链接。你可以在这里暂停或恢复每日投递；如果你是付费用户，也能从同一个页面进入 Stripe billing portal。',
+                detailsTitle: '订阅信息',
+                detailsCopy: '我们会使用这些信息，把你的交付内容匹配到正确的市场、语言和受众画像。',
+                emailLabel: '邮箱',
+                planLabel: '方案',
+                languageLabel: '交付语言',
+                marketLabel: '主要市场',
+                audienceLabel: '受众画像',
+                prefsCopy: '如果你想让之后的交付跟随不同的市场、语言或受众画像，可以直接在这里修改。',
+                prefLanguageLabel: '交付语言',
+                prefMarketLabel: '主要市场',
+                prefAudienceLabel: '受众画像',
+                actionsTitle: '可执行操作',
+                actionsCopy: '你可以在这里暂停投递、恢复投递，或打开账单管理。',
+                savePrefsBtn: '保存偏好',
+                pauseBtn: '暂停投递',
+                resumeBtn: '恢复投递',
+                billingBtn: '打开 Stripe 账单页',
+                homeLink: '返回首页',
+                helperCopy: '暂停投递只会停止每日邮件，不会自动取消扣费。若要取消订阅，请在 Stripe 内部管理你的方案。',
+                statusLoading: '正在加载访问链接',
+                statusInvalid: '访问链接无效',
+                statusActive: '投递已开启',
+                statusPaused: '投递已暂停',
+                invalidLink: '这个管理链接缺少 token，或已经过期。',
+                loadError: '无法加载这个管理页面。',
+                pauseError: '无法暂停投递。',
+                pauseSuccess: '投递已暂停。在你重新开启之前，不会再收到每日晨报。',
+                resumeError: '无法恢复投递。',
+                resumeSuccess: '投递已重新开启。',
+                savePrefsError: '无法更新偏好设置。',
+                savePrefsSuccess: '偏好已更新，之后的生成和投递会按新的市场、语言和受众画像执行。',
+                billingError: '无法打开账单管理页面。',
+                genericLoadError: '无法加载你的管理页面。',
+                audienceTone: {
+                    general: {
+                        pageCopy: '这个页面绑定的是你的私有 REscript 访问链接。你可以在这里管理更偏主流北美买卖家教育、市场点评和经纪人品牌内容的交付节奏。',
+                        detailsCopy: '这些设置会让你的市场内容台继续对齐你账户里的市场、语言和主流北美客户受众画像。',
+                        prefsCopy: '如果你想让之后的交付在市场、语言或 audience 模式之间切换，可以直接在这里修改。',
+                        actionsCopy: '你可以在这里暂停投递、恢复投递，或打开账单管理，同时保持主流市场内容工作流一致。',
+                        helperCopy: '暂停投递只会停止每日邮件，不会自动取消扣费。若要取消订阅，请在 Stripe 内部管理你的方案。',
+                        savePrefsSuccess: '偏好已更新，之后的生成和投递会按新的市场、语言和主流北美受众模式执行。',
+                    },
+                    'chinese-community': {
+                        pageCopy: '这个页面绑定的是你的私有 REscript 访问链接。你可以在这里管理更偏华语家庭、搬迁需求、双语教育和社区信任建立的交付节奏。',
+                        detailsCopy: '这些设置会让你的社群内容台继续对齐你账户里的市场、语言和华语 / 搬迁家庭受众画像。',
+                        prefsCopy: '如果你想让之后的交付在市场、语言或 audience 模式之间切换，适配新的双语或搬迁客户结构，可以直接在这里修改。',
+                        actionsCopy: '你可以在这里暂停投递、恢复投递，或打开账单管理，同时保持双语社群内容工作流一致。',
+                        helperCopy: '暂停投递只会停止每日邮件，不会自动取消扣费。若要取消订阅，请在 Stripe 内部管理你的方案。如果你的客户结构变化了，也记得先更新 audience 模式。',
+                        savePrefsSuccess: '偏好已更新，之后的生成和投递会按新的市场、语言和华语 / 搬迁家庭模式执行。',
+                    },
+                },
+                plan: { free: '免费', subscriber: '付费订阅', vip: 'VIP' },
+                language: { en: '英文', zh: '中文' },
+                audience: {
+                    general: '主流北美客户受众',
+                    'chinese-community': '华语 / 搬迁家庭受众',
+                },
+                market: {
+                    'new-york': '纽约',
+                    'long-island': '纽约州长岛',
+                    'los-angeles': '洛杉矶',
+                    'san-francisco': '旧金山湾区',
+                    'chicago': '芝加哥',
+                    'miami': '迈阿密',
+                    'seattle': '西雅图',
+                    'boston': '波士顿',
+                    'houston': '休斯顿',
+                },
+            },
+        };
+
+        let currentLang = 'en';
+        let subscriptionData = null;
+        let currentAudience = 'general';
+        const params = new URLSearchParams(window.location.search);
+        const token = params.get('token') || '';
+        const marketIds = ['new-york', 'long-island', 'los-angeles', 'san-francisco', 'chicago', 'miami', 'seattle', 'boston', 'houston'];
+        const audienceIds = ['general', 'chinese-community'];
+        const languageIds = ['en', 'zh'];
+
+        function getUi() {
+            return copy[currentLang] || copy.en;
+        }
+
+        function setText(id, value) {
+            const el = document.getElementById(id);
+            if (el) {
+                el.textContent = value;
+            }
+        }
+
+        function renderSelectOptions() {
+            const ui = getUi();
+            document.getElementById('prefLanguage').innerHTML = languageIds
+                .map((language) => `<option value="${language}">${ui.language[language] || language}</option>`)
+                .join('');
+            document.getElementById('prefMarket').innerHTML = marketIds
+                .map((market) => `<option value="${market}">${ui.market[market] || market}</option>`)
+                .join('');
+            document.getElementById('prefAudience').innerHTML = audienceIds
+                .map((audience) => `<option value="${audience}">${ui.audience[audience] || audience}</option>`)
+                .join('');
+        }
+
+        function applyAudienceNarrative() {
+            const ui = getUi();
+            const narrative = ui.audienceTone[currentAudience] || ui.audienceTone.general;
+            setText('pageCopy', narrative.pageCopy);
+            setText('detailsCopy', narrative.detailsCopy);
+            setText('prefsCopy', narrative.prefsCopy);
+            setText('actionsCopy', narrative.actionsCopy);
+            setText('helperCopy', narrative.helperCopy);
+        }
+
+        function setLang(nextLang) {
+            currentLang = nextLang === 'zh' ? 'zh' : 'en';
+            localStorage.setItem('rescript-ui-lang', currentLang);
+            const ui = getUi();
+            document.documentElement.lang = currentLang === 'zh' ? 'zh-CN' : 'en';
+            document.title = ui.title;
+            document.getElementById('langToggle').textContent = ui.toggle;
+            setText('eyebrow', ui.eyebrow);
+            setText('pageTitle', ui.pageTitle);
+            setText('detailsTitle', ui.detailsTitle);
+            setText('emailLabel', ui.emailLabel);
+            setText('planLabel', ui.planLabel);
+            setText('languageLabel', ui.languageLabel);
+            setText('marketLabel', ui.marketLabel);
+            setText('audienceLabel', ui.audienceLabel);
+            setText('prefLanguageLabel', ui.prefLanguageLabel);
+            setText('prefMarketLabel', ui.prefMarketLabel);
+            setText('prefAudienceLabel', ui.prefAudienceLabel);
+            setText('actionsTitle', ui.actionsTitle);
+            setText('savePrefsBtn', ui.savePrefsBtn);
+            setText('pauseBtn', ui.pauseBtn);
+            setText('resumeBtn', ui.resumeBtn);
+            setText('billingBtn', ui.billingBtn);
+            setText('homeLink', ui.homeLink);
+            renderSelectOptions();
+            applyAudienceNarrative();
+
+            if (!subscriptionData) {
+                const badge = document.getElementById('statusBadge');
+                if (badge.classList.contains('invalid')) {
+                    badge.textContent = ui.statusLoading;
+                }
+            } else {
+                hydrateDetails(subscriptionData);
+            }
+        }
+
+        function toggleLang() {
+            setLang(currentLang === 'en' ? 'zh' : 'en');
+        }
+
+        function localizePlan(plan) {
+            return getUi().plan[plan] || plan;
+        }
+
+        function localizeLanguage(language) {
+            return getUi().language[language] || language;
+        }
+
+        function localizeMarket(market) {
+            return getUi().market[market] || market;
+        }
+
+        function localizeAudience(audienceProfile) {
+            return getUi().audience[audienceProfile] || audienceProfile;
+        }
+
+        function hydrateDetails(data) {
+            subscriptionData = data;
+            currentAudience = data.audienceProfile === 'chinese-community' ? 'chinese-community' : 'general';
+            applyAudienceNarrative();
+            document.getElementById('metaBox').style.display = 'grid';
+            document.getElementById('prefsBox').style.display = 'grid';
+            document.getElementById('emailValue').textContent = data.email;
+            document.getElementById('planValue').textContent = localizePlan(data.plan);
+            document.getElementById('languageValue').textContent = localizeLanguage(data.language);
+            document.getElementById('marketValue').textContent = localizeMarket(data.market);
+            document.getElementById('audienceValue').textContent = localizeAudience(data.audienceProfile);
+            document.getElementById('prefLanguage').value = data.language;
+            document.getElementById('prefMarket').value = data.market;
+            document.getElementById('prefAudience').value = data.audienceProfile;
+
+            const badge = document.getElementById('statusBadge');
+            badge.textContent = data.active ? getUi().statusActive : getUi().statusPaused;
+            badge.className = `status-badge ${data.active ? 'active' : 'paused'}`;
+
+            document.getElementById('pauseBtn').style.display = data.active ? 'inline-flex' : 'none';
+            document.getElementById('resumeBtn').style.display = data.active ? 'none' : 'inline-flex';
+            document.getElementById('billingBtn').style.display = data.hasBilling ? 'inline-flex' : 'none';
+        }
+
+        function showMessage(type, text) {
+            const box = document.getElementById('message');
+            box.className = `message ${type}`;
+            box.textContent = text;
+        }
+
+        async function loadStatus() {
+            if (!token) {
+                document.getElementById('statusBadge').textContent = getUi().statusInvalid;
+                showMessage('error', getUi().invalidLink);
+                return;
+            }
+
+            const response = await fetch(`/api/subscription/status?token=${encodeURIComponent(token)}`);
+            const result = await response.json();
+            if (!result.success) {
+                document.getElementById('statusBadge').textContent = getUi().statusInvalid;
+                showMessage('error', result.error || getUi().loadError);
+                return;
+            }
+
+            const data = result.data;
+            if (data.language === 'zh' || data.language === 'en') {
+                setLang(data.language);
+            }
+            hydrateDetails(data);
+        }
+
+        async function savePreferences() {
+            const response = await fetch('/api/subscription/preferences', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    token,
+                    language: document.getElementById('prefLanguage').value,
+                    market: document.getElementById('prefMarket').value,
+                    audienceProfile: document.getElementById('prefAudience').value,
+                }),
+            });
+            const result = await response.json();
+            if (!result.success || !result.data) {
+                showMessage('error', result.error || getUi().savePrefsError);
+                return;
+            }
+
+            if (result.data.language === 'zh' || result.data.language === 'en') {
+                setLang(result.data.language);
+            }
+            hydrateDetails(result.data);
+            const narrative = getUi().audienceTone[currentAudience] || getUi().audienceTone.general;
+            showMessage('success', narrative.savePrefsSuccess);
+        }
+
+        async function unsubscribe() {
+            const response = await fetch('/api/subscription/unsubscribe', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ token }),
+            });
+            const result = await response.json();
+            if (!result.success) {
+                showMessage('error', result.error || getUi().pauseError);
+                return;
+            }
+            showMessage('success', getUi().pauseSuccess);
+            loadStatus();
+        }
+
+        async function resubscribe() {
+            const response = await fetch('/api/subscription/resubscribe', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ token }),
+            });
+            const result = await response.json();
+            if (!result.success) {
+                showMessage('error', result.error || getUi().resumeError);
+                return;
+            }
+            showMessage('success', getUi().resumeSuccess);
+            loadStatus();
+        }
+
+        async function openBilling() {
+            const response = await fetch('/api/subscription/billing-portal', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ token }),
+            });
+            const result = await response.json();
+            if (!result.success || !result.url) {
+                showMessage('error', result.error || getUi().billingError);
+                return;
+            }
+            window.location.href = result.url;
+        }
+
+        const savedLang = localStorage.getItem('rescript-ui-lang');
+        const browserLang = navigator.language.toLowerCase().startsWith('zh') ? 'zh' : 'en';
+        setLang(savedLang || browserLang);
+
+        loadStatus().catch(() => {
+            showMessage('error', getUi().genericLoadError);
+        });
+    </script>
+</body>
+</html>
