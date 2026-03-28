@@ -3,19 +3,19 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Contact REscript</title>
-    <meta name="description" content="Contact REscript for support, billing, privacy, or compliance questions. Email support@kevv.ai.">
+    <title id="metaTitle">Contact REscript</title>
+    <meta id="metaDescription" name="description" content="Contact REscript for support, billing, privacy, or compliance questions. Email support@kevv.ai.">
     <meta name="robots" content="index, follow, max-image-preview:large">
     <link rel="canonical" href="https://rescript.kevv.ai/contact.html">
     <meta property="og:site_name" content="REscript">
     <meta property="og:type" content="website">
-    <meta property="og:title" content="Contact REscript">
-    <meta property="og:description" content="Support, billing, privacy, and security-review contact details for REscript.">
+    <meta id="ogTitle" property="og:title" content="Contact REscript">
+    <meta id="ogDescription" property="og:description" content="Support, billing, privacy, and compliance contact details for REscript.">
     <meta property="og:url" content="https://rescript.kevv.ai/contact.html">
     <meta property="og:image" content="https://rescript.kevv.ai/og-cover.png">
     <meta name="twitter:card" content="summary_large_image">
-    <meta name="twitter:title" content="Contact REscript">
-    <meta name="twitter:description" content="Reach REscript at support@kevv.ai for support, billing, privacy, or compliance questions.">
+    <meta id="twitterTitle" name="twitter:title" content="Contact REscript">
+    <meta id="twitterDescription" name="twitter:description" content="Reach REscript at support@kevv.ai for support, billing, privacy, or compliance questions.">
     <meta name="twitter:image" content="https://rescript.kevv.ai/og-cover.png">
     <meta name="theme-color" content="#203443">
     <link rel="icon" type="image/svg+xml" href="/favicon.svg">
@@ -279,24 +279,25 @@
                 <span>REscript</span>
             </a>
             <div class="actions">
-                <a class="btn" href="/markets.html">Markets</a>
-                <a class="btn" href="/privacy.html">Privacy</a>
-                <a class="btn" href="/terms.html">Terms</a>
-                <a class="btn primary" href="/#signup">Get free sample</a>
+                <button class="btn" id="langToggle" type="button">中文</button>
+                <a class="btn" href="/markets.html" id="navMarkets">Markets</a>
+                <a class="btn" href="/privacy.html" id="navPrivacy">Privacy</a>
+                <a class="btn" href="/terms.html" id="navTerms">Terms</a>
+                <a class="btn primary" href="/#signup" id="navCta">Get free sample</a>
             </div>
         </header>
 
         <main class="hero">
-            <div class="eyebrow">Contact</div>
-            <h1>Contact REscript for support, billing, privacy, or site review questions.</h1>
-            <p>
+            <div class="eyebrow" id="eyebrow">Contact</div>
+            <h1 id="pageTitle">Contact REscript for support, billing, privacy, or compliance questions.</h1>
+            <p id="heroCopy">
                 REscript is a web-based subscription service for North American real estate agents. If you have a
                 support question, a billing issue, a privacy request, or you need to report something unusual on this
                 site, use the support email below.
             </p>
             <div class="trust-box">
-                <strong>Trust and safety note</strong>
-                <p>
+                <strong id="trustTitle">Trust and safety note</strong>
+                <p id="trustCopy">
                     This domain is used for a web-based content service. It does not require browser extensions,
                     desktop software downloads, crypto-wallet connections, or device-access prompts in order to use the
                     service.
@@ -307,46 +308,164 @@
         <section class="section">
             <div class="grid">
                 <article class="card">
-                    <h2>Support and billing</h2>
-                    <p>Questions about subscription status, sample delivery, account setup, or Stripe billing portal access.</p>
+                    <h2 id="card1Title">Support and billing</h2>
+                    <p id="card1Copy">Questions about subscription status, sample delivery, account setup, or Stripe billing portal access.</p>
                     <a class="contact-link" href="mailto:support@kevv.ai">support@kevv.ai</a>
                 </article>
                 <article class="card">
-                    <h2>Privacy and data requests</h2>
-                    <p>Requests related to your stored email, subscription data, or privacy-policy questions.</p>
+                    <h2 id="card2Title">Privacy and data requests</h2>
+                    <p id="card2Copy">Requests related to your stored email, subscription data, or privacy-policy questions.</p>
                     <a class="contact-link" href="mailto:support@kevv.ai">support@kevv.ai</a>
                 </article>
                 <article class="card">
-                    <h2>Security review questions</h2>
-                    <p>If you saw a browser warning, a suspicious page, or unexpected behavior on this domain, report it here.</p>
+                    <h2 id="card3Title">Security and compliance questions</h2>
+                    <p id="card3Copy">If you saw a browser warning, a suspicious page, or unexpected behavior on this domain, report it here.</p>
                     <a class="contact-link" href="mailto:support@kevv.ai">support@kevv.ai</a>
                 </article>
             </div>
         </section>
 
         <section class="section">
-            <h2>What REscript is</h2>
-            <p>
+            <h2 id="whatTitle">What REscript is</h2>
+            <p id="whatCopy">
                 REscript delivers market-specific real estate video scripts for agents and teams. Users can request one
                 free sample, review it in a private viewer, and optionally subscribe for daily delivery. The product is
                 designed for content drafting and filming workflow support, not for software installation or browser
                 modification.
             </p>
-            <p>
+            <p id="supportCopy">
                 支持邮箱：<a href="mailto:support@kevv.ai">support@kevv.ai</a>。支持英文和中文邮件沟通。
             </p>
         </section>
 
         <footer class="footer">
-            <div>© 2026 REscript · Web-based real estate content service</div>
+            <div id="footerCopy">© 2026 REscript · Web-based real estate content service</div>
             <div class="footer-links">
-                <a href="/">Home</a>
-                <a href="/markets.html">Markets</a>
-                <a href="/privacy.html">Privacy</a>
-                <a href="/terms.html">Terms</a>
+                <a href="/" id="footerHome">Home</a>
+                <a href="/markets.html" id="footerMarkets">Markets</a>
+                <a href="/privacy.html" id="footerPrivacy">Privacy</a>
+                <a href="/terms.html" id="footerTerms">Terms</a>
                 <a href="mailto:support@kevv.ai">support@kevv.ai</a>
             </div>
         </footer>
     </div>
+    <script>
+        const COPY = {
+            en: {
+                title: 'Contact REscript',
+                description: 'Contact REscript for support, billing, privacy, or compliance questions. Email support@kevv.ai.',
+                ogDescription: 'Support, billing, privacy, and compliance contact details for REscript.',
+                twitterDescription: 'Reach REscript at support@kevv.ai for support, billing, privacy, or compliance questions.',
+                toggle: '中文',
+                navMarkets: 'Markets',
+                navPrivacy: 'Privacy',
+                navTerms: 'Terms',
+                navCta: 'Get free sample',
+                eyebrow: 'Contact',
+                pageTitle: 'Contact REscript for support, billing, privacy, or compliance questions.',
+                heroCopy: 'REscript is a web-based subscription service for North American real estate agents. If you have a support question, a billing issue, a privacy request, or you need to report something unusual on this site, use the support email below.',
+                trustTitle: 'Trust and safety note',
+                trustCopy: 'This domain is used for a web-based content service. It does not require browser extensions, desktop software downloads, crypto-wallet connections, or device-access prompts in order to use the service.',
+                card1Title: 'Support and billing',
+                card1Copy: 'Questions about subscription status, sample delivery, account setup, or Stripe billing portal access.',
+                card2Title: 'Privacy and data requests',
+                card2Copy: 'Requests related to your stored email, subscription data, or privacy-policy questions.',
+                card3Title: 'Security and compliance questions',
+                card3Copy: 'If you saw a browser warning, a suspicious page, or unexpected behavior on this domain, report it here.',
+                whatTitle: 'What REscript is',
+                whatCopy: 'REscript delivers market-specific real estate video scripts for agents and teams. Users can request one free sample, review it in a private viewer, and optionally subscribe for daily delivery. The product is designed for content drafting and filming workflow support, not for software installation or browser modification.',
+                supportCopy: 'Support email: <a href="mailto:support@kevv.ai">support@kevv.ai</a>. We can respond in English or Chinese.',
+                footerCopy: '© 2026 REscript · Web-based real estate content service',
+                footerHome: 'Home',
+                footerMarkets: 'Markets',
+                footerPrivacy: 'Privacy',
+                footerTerms: 'Terms',
+            },
+            zh: {
+                title: '联系 REscript',
+                description: '联系 REscript，处理支持、账单、隐私或合规相关问题。邮箱：support@kevv.ai。',
+                ogDescription: 'REscript 的支持、账单、隐私与合规联系信息。',
+                twitterDescription: '如有支持、账单、隐私或合规问题，请通过 support@kevv.ai 联系 REscript。',
+                toggle: 'EN',
+                navMarkets: '城市市场',
+                navPrivacy: '隐私政策',
+                navTerms: '服务条款',
+                navCta: '领取免费 sample',
+                eyebrow: '联系',
+                pageTitle: '联系 REscript，处理支持、账单、隐私或合规相关问题。',
+                heroCopy: 'REscript 是一项面向北美地产经纪人的网页订阅服务。如果你有支持问题、账单问题、隐私请求，或者发现这个站点上有异常情况，请直接通过下方邮箱联系。',
+                trustTitle: '信任与安全说明',
+                trustCopy: '这个域名用于网页内容服务，不需要安装浏览器扩展、下载桌面软件、连接加密钱包，也不会要求设备访问权限。',
+                card1Title: '支持与账单',
+                card1Copy: '包括订阅状态、sample 发送、账户设置，以及 Stripe 账单入口相关问题。',
+                card2Title: '隐私与数据请求',
+                card2Copy: '包括邮箱存储、订阅数据，以及隐私政策相关问题。',
+                card3Title: '安全与合规问题',
+                card3Copy: '如果你看到了浏览器警告、可疑页面，或本域名上的异常行为，请从这里联系。',
+                whatTitle: 'REscript 是什么',
+                whatCopy: 'REscript 为经纪人和团队提供按市场生成的地产视频脚本。用户可以先领取一次免费 sample，在私有 viewer 中查看，再选择是否开启每日正式交付。产品定位是内容初稿与拍摄工作流支持，而不是软件下载或浏览器修改工具。',
+                supportCopy: '支持邮箱：<a href="mailto:support@kevv.ai">support@kevv.ai</a>。支持英文和中文邮件沟通。',
+                footerCopy: '© 2026 REscript · 面向地产经纪人的网页内容服务',
+                footerHome: '首页',
+                footerMarkets: '城市市场',
+                footerPrivacy: '隐私政策',
+                footerTerms: '服务条款',
+            }
+        };
+
+        function setText(id, value) {
+            const el = document.getElementById(id);
+            if (el) el.textContent = value;
+        }
+
+        function setHtml(id, value) {
+            const el = document.getElementById(id);
+            if (el) el.innerHTML = value;
+        }
+
+        function applyLang(lang) {
+            const ui = COPY[lang] || COPY.en;
+            document.documentElement.lang = lang === 'zh' ? 'zh-CN' : 'en';
+            document.title = ui.title;
+            document.getElementById('metaDescription').setAttribute('content', ui.description);
+            document.getElementById('ogTitle').setAttribute('content', ui.title);
+            document.getElementById('ogDescription').setAttribute('content', ui.ogDescription);
+            document.getElementById('twitterTitle').setAttribute('content', ui.title);
+            document.getElementById('twitterDescription').setAttribute('content', ui.twitterDescription);
+            setText('langToggle', ui.toggle);
+            setText('navMarkets', ui.navMarkets);
+            setText('navPrivacy', ui.navPrivacy);
+            setText('navTerms', ui.navTerms);
+            setText('navCta', ui.navCta);
+            setText('eyebrow', ui.eyebrow);
+            setText('pageTitle', ui.pageTitle);
+            setText('heroCopy', ui.heroCopy);
+            setText('trustTitle', ui.trustTitle);
+            setText('trustCopy', ui.trustCopy);
+            setText('card1Title', ui.card1Title);
+            setText('card1Copy', ui.card1Copy);
+            setText('card2Title', ui.card2Title);
+            setText('card2Copy', ui.card2Copy);
+            setText('card3Title', ui.card3Title);
+            setText('card3Copy', ui.card3Copy);
+            setText('whatTitle', ui.whatTitle);
+            setText('whatCopy', ui.whatCopy);
+            setHtml('supportCopy', ui.supportCopy);
+            setText('footerCopy', ui.footerCopy);
+            setText('footerHome', ui.footerHome);
+            setText('footerMarkets', ui.footerMarkets);
+            setText('footerPrivacy', ui.footerPrivacy);
+            setText('footerTerms', ui.footerTerms);
+        }
+
+        const params = new URLSearchParams(window.location.search);
+        let currentLang = params.get('lang') === 'zh' ? 'zh' : (localStorage.getItem('rescript-ui-lang') === 'zh' ? 'zh' : 'en');
+        applyLang(currentLang);
+        document.getElementById('langToggle').addEventListener('click', () => {
+            currentLang = currentLang === 'zh' ? 'en' : 'zh';
+            localStorage.setItem('rescript-ui-lang', currentLang);
+            applyLang(currentLang);
+        });
+    </script>
 </body>
 </html>

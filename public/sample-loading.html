@@ -4,23 +4,24 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>REscript | Preparing Your Sample</title>
+    <title>REscript | Generating Sample</title>
     <meta name="robots" content="noindex, nofollow">
     <link rel="icon" href="/favicon.svg" type="image/svg+xml">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@600;700&family=Outfit:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700&display=swap" rel="stylesheet">
     <style>
         :root {
             --bg: #ece6dd;
-            --panel: rgba(255, 253, 248, 0.92);
-            --card: rgba(255, 255, 255, 0.84);
+            --panel: rgba(255, 252, 247, 0.9);
+            --card: rgba(255, 255, 255, 0.72);
             --line: rgba(32, 52, 67, 0.12);
             --ink: #17212b;
-            --muted: #5c6775;
+            --muted: #5a6878;
             --navy: #203443;
             --accent: #9b4a32;
             --green: #255f55;
+            --runtime: #3a7ca5;
             --shadow: 0 24px 60px rgba(15, 23, 42, 0.1);
             --radius: 26px;
         }
@@ -35,9 +36,9 @@
             font-family: "Outfit", sans-serif;
             color: var(--ink);
             background:
-                radial-gradient(circle at top left, rgba(155, 74, 50, 0.12), transparent 28%),
-                radial-gradient(circle at bottom right, rgba(32, 52, 67, 0.12), transparent 26%),
-                var(--bg);
+                radial-gradient(circle at top left, rgba(155, 74, 50, 0.12), transparent 26%),
+                radial-gradient(circle at bottom right, rgba(58, 124, 165, 0.12), transparent 24%),
+                linear-gradient(180deg, #f7f2e8 0%, #ece6dd 100%);
         }
 
         .shell {
@@ -48,12 +49,15 @@
         }
 
         .panel {
-            width: min(960px, 100%);
+            width: min(980px, 100%);
             padding: 28px;
             border-radius: 32px;
-            background: var(--panel);
+            background:
+                linear-gradient(180deg, rgba(255, 252, 247, 0.96), rgba(248, 242, 233, 0.92)),
+                var(--panel);
             border: 1px solid var(--line);
             box-shadow: var(--shadow);
+            backdrop-filter: blur(18px);
         }
 
         .brand {
@@ -62,7 +66,8 @@
             gap: 12px;
             text-decoration: none;
             color: inherit;
-            margin-bottom: 22px;
+            margin-bottom: 24px;
+            color: var(--ink);
         }
 
         .brand-mark {
@@ -79,12 +84,12 @@
 
         .layout {
             display: grid;
-            grid-template-columns: minmax(0, 1.08fr) minmax(320px, 380px);
-            gap: 20px;
+            grid-template-columns: minmax(0, 1.15fr) minmax(300px, 360px);
+            gap: 18px;
         }
 
         .hero {
-            padding: 14px 6px 6px;
+            padding: 10px 4px 6px;
         }
 
         .eyebrow {
@@ -93,9 +98,9 @@
             gap: 10px;
             padding: 10px 14px;
             border-radius: 999px;
-            background: rgba(255, 255, 255, 0.74);
+            background: rgba(255, 255, 255, 0.78);
             border: 1px solid var(--line);
-            color: var(--navy);
+            color: var(--ink);
             font-size: 12px;
             font-weight: 700;
             letter-spacing: 0.12em;
@@ -112,13 +117,13 @@
         }
 
         h1 {
-            margin: 18px 0 10px;
+            margin: 16px 0 10px;
             font-family: "Outfit", sans-serif;
-            font-size: clamp(2.4rem, 4.4vw, 4.1rem);
+            font-size: clamp(2.5rem, 4.5vw, 4.4rem);
             font-weight: 700;
             line-height: 1.02;
             letter-spacing: -0.04em;
-            max-width: 560px;
+            max-width: 620px;
         }
 
         .accent {
@@ -129,31 +134,32 @@
             margin: 0;
             max-width: 560px;
             color: var(--muted);
-            font-size: 1.02rem;
-            line-height: 1.8;
+            font-size: 1rem;
+            line-height: 1.72;
         }
 
         .phase-grid {
-            margin-top: 26px;
+            margin-top: 24px;
             display: grid;
-            gap: 12px;
+            gap: 10px;
         }
 
         .phase {
             display: flex;
             align-items: center;
             gap: 14px;
-            padding: 16px 18px;
+            padding: 14px 16px;
             border-radius: 18px;
-            background: rgba(255, 255, 255, 0.72);
-            border: 1px solid transparent;
+            background: rgba(255, 255, 255, 0.58);
+            border: 1px solid var(--line);
             transition: transform 0.25s ease, border-color 0.25s ease, background 0.25s ease;
+            box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.48);
         }
 
         .phase.active {
             transform: translateX(6px);
-            border-color: rgba(155, 74, 50, 0.24);
-            background: rgba(255, 255, 255, 0.94);
+            border-color: rgba(58, 124, 165, 0.34);
+            background: linear-gradient(135deg, rgba(58, 124, 165, 0.08), rgba(255, 255, 255, 0.82));
         }
 
         .phase.done {
@@ -174,12 +180,12 @@
             position: absolute;
             inset: 3px;
             border-radius: 999px;
-            background: var(--accent);
+            background: var(--runtime);
         }
 
         .phase.done .phase-bullet {
-            border-color: rgba(37, 95, 85, 0.28);
-            background: rgba(37, 95, 85, 0.14);
+            border-color: rgba(37, 95, 85, 0.24);
+            background: rgba(37, 95, 85, 0.1);
         }
 
         .phase.done .phase-bullet::after {
@@ -200,25 +206,37 @@
             margin-top: 4px;
             color: var(--muted);
             font-size: 0.92rem;
-            line-height: 1.6;
+            line-height: 1.5;
         }
 
         .status {
             margin-top: 18px;
             padding: 16px 18px;
             border-radius: 18px;
-            background: rgba(37, 95, 85, 0.08);
-            border: 1px solid rgba(37, 95, 85, 0.14);
-            color: var(--green);
+            background: linear-gradient(135deg, rgba(32, 52, 67, 0.06), rgba(58, 124, 165, 0.08));
+            border: 1px solid rgba(58, 124, 165, 0.18);
+            color: var(--navy);
             font-size: 0.95rem;
-            line-height: 1.7;
-            min-height: 88px;
+            line-height: 1.65;
+            min-height: 70px;
+            font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .status::before {
+            content: "";
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(90deg, transparent, rgba(58, 124, 165, 0.12), transparent);
+            transform: translateX(-100%);
+            animation: status-sweep 2.6s linear infinite;
         }
 
         .aside {
             padding: 22px;
             border-radius: var(--radius);
-            background: linear-gradient(180deg, rgba(255, 255, 255, 0.9), rgba(248, 242, 235, 0.95));
+            background: linear-gradient(180deg, rgba(244, 238, 229, 0.94), rgba(239, 232, 220, 0.94));
             border: 1px solid var(--line);
         }
 
@@ -227,13 +245,15 @@
             letter-spacing: 0.14em;
             text-transform: uppercase;
             color: var(--muted);
+            font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
         }
 
         .aside-title {
             margin: 12px 0 16px;
-            font-family: "Cormorant Garamond", serif;
-            font-size: 2rem;
-            line-height: 0.98;
+            font-family: "Outfit", sans-serif;
+            font-size: 1.75rem;
+            line-height: 1.02;
+            letter-spacing: -0.03em;
         }
 
         .summary {
@@ -244,7 +264,7 @@
         .summary-card {
             padding: 14px 16px;
             border-radius: 16px;
-            background: var(--card);
+            background: rgba(255, 255, 255, 0.62);
             border: 1px solid var(--line);
         }
 
@@ -254,6 +274,7 @@
             text-transform: uppercase;
             color: var(--muted);
             margin-bottom: 6px;
+            font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
         }
 
         .summary-value {
@@ -266,7 +287,7 @@
             margin-top: 16px;
             color: var(--muted);
             font-size: 0.92rem;
-            line-height: 1.75;
+            line-height: 1.65;
         }
 
         .actions {
@@ -306,9 +327,15 @@
         }
 
         .error {
-            color: #8a2d26;
-            background: rgba(138, 45, 38, 0.08);
-            border-color: rgba(138, 45, 38, 0.16);
+            color: #ffb4aa;
+            background: rgba(138, 45, 38, 0.14);
+            border-color: rgba(255, 110, 96, 0.22);
+        }
+
+        @keyframes status-sweep {
+            to {
+                transform: translateX(100%);
+            }
         }
 
         @media (max-width: 860px) {
@@ -333,40 +360,40 @@
         <main class="panel">
             <a class="brand" href="/subscribe.html">
                 <span class="brand-mark">R</span>
-                <span id="brandText">REscript · agent content desk</span>
+                <span id="brandText">REscript · sample runtime</span>
             </a>
 
             <div class="layout">
                 <section class="hero">
-                    <div class="eyebrow" id="eyebrow">Generating your sample</div>
-                    <h1 id="title">Building your <span class="accent">private viewer</span>.</h1>
-                    <p class="copy" id="intro">We are checking today's market package, preparing the sample, and getting your private link ready.</p>
+                    <div class="eyebrow" id="eyebrow">Live generation</div>
+                    <h1 id="title">Agent is <span class="accent">thinking</span>.</h1>
+                    <p class="copy" id="intro">Building your private script package now. This usually takes 45 to 90 seconds.</p>
 
                     <div class="phase-grid">
                         <div class="phase active" id="phase0">
                             <div class="phase-bullet"></div>
                             <div>
-                                <div class="phase-title" id="phaseTitle0">Checking today's market package</div>
-                                <div class="phase-copy" id="phaseCopy0">If a matching package already exists, we reuse it so you can open faster.</div>
+                                <div class="phase-title" id="phaseTitle0">Checking cache</div>
+                                <div class="phase-copy" id="phaseCopy0">Reuse today’s matching package if it already exists.</div>
                             </div>
                         </div>
                         <div class="phase" id="phase1">
                             <div class="phase-bullet"></div>
                             <div>
-                                <div class="phase-title" id="phaseTitle1">Generating local scripts</div>
-                                <div class="phase-copy" id="phaseCopy1">If there is no fresh match yet, we generate one local news topic and evergreen modules for your chosen lens.</div>
+                                <div class="phase-title" id="phaseTitle1">Generating scripts</div>
+                                <div class="phase-copy" id="phaseCopy1">Creating a local news angle and matched evergreen modules.</div>
                             </div>
                         </div>
                         <div class="phase" id="phase2">
                             <div class="phase-bullet"></div>
                             <div>
-                                <div class="phase-title" id="phaseTitle2">Preparing your private access link</div>
-                                <div class="phase-copy" id="phaseCopy2">The same viewer link is opened in this tab and sent to your inbox for later review.</div>
+                                <div class="phase-title" id="phaseTitle2">Opening viewer</div>
+                                <div class="phase-copy" id="phaseCopy2">Preparing your private link and email handoff.</div>
                             </div>
                         </div>
                     </div>
 
-                    <div class="status" id="statusBox">Starting your live sample...</div>
+                    <div class="status" id="statusBox">Booting sample runtime...</div>
                     <div class="actions">
                         <button class="button button-primary" id="checkoutButton" hidden type="button">Start paid delivery</button>
                         <a class="button button-secondary" id="backButton" href="/subscribe.html">Back</a>
@@ -374,8 +401,8 @@
                 </section>
 
                 <aside class="aside">
-                    <div class="aside-kicker" id="asideKicker">Sample request</div>
-                    <div class="aside-title" id="asideTitle">This is the package we are preparing.</div>
+                    <div class="aside-kicker" id="asideKicker">Runtime</div>
+                    <div class="aside-title" id="asideTitle">Live request</div>
                     <div class="summary">
                         <div class="summary-card">
                             <div class="summary-label" id="marketLabel">Market</div>
@@ -390,7 +417,7 @@
                             <div class="summary-value" id="audienceValue">-</div>
                         </div>
                     </div>
-                    <p class="aside-note" id="asideNote">As usage grows, the same market-language-audience combination will usually already exist for the day, which means this page becomes a near-instant handoff instead of a fresh generation.</p>
+                    <p class="aside-note" id="asideNote">If this market-language-audience combination already exists today, handoff is almost instant. New combinations take a little longer.</p>
                 </aside>
             </div>
         </main>
@@ -400,31 +427,31 @@
         const SAMPLE_REQUEST_STORAGE_KEY = 'rescript-sample-request';
         const translations = {
             en: {
-                title: 'REscript | Preparing Your Sample',
-                brandText: 'REscript · agent content desk',
-                eyebrow: 'Generating your sample',
-                heading: 'Building your <span class="accent">private viewer</span>.',
-                intro: 'We are checking today\'s market package, preparing the sample, and getting your private link ready.',
-                phaseTitle0: 'Checking today\'s market package',
-                phaseCopy0: 'If a matching package already exists, we reuse it so you can open faster.',
-                phaseTitle1: 'Generating local scripts',
-                phaseCopy1: 'If there is no fresh match yet, we generate one local news topic and evergreen modules for your chosen lens.',
-                phaseTitle2: 'Preparing your private access link',
-                phaseCopy2: 'The same viewer link is opened in this tab and sent to your inbox for later review.',
-                statusStarting: 'Starting your live sample...',
-                statusWorking: 'Your sample is being prepared. Keep this tab open.',
+                title: 'REscript | Generating Sample',
+                brandText: 'REscript · sample runtime',
+                eyebrow: 'Live generation',
+                heading: 'Agent is <span class="accent">thinking</span>.',
+                intro: 'Building your private script package now. This usually takes 45 to 90 seconds.',
+                phaseTitle0: 'Checking cache',
+                phaseCopy0: 'Reuse today\'s matching package if it already exists.',
+                phaseTitle1: 'Generating scripts',
+                phaseCopy1: 'Creating a local news angle and matched evergreen modules.',
+                phaseTitle2: 'Opening viewer',
+                phaseCopy2: 'Preparing your private link and email handoff.',
+                statusStarting: 'Booting sample runtime...',
+                statusWorking: 'Agent is thinking. Keep this tab open.',
                 statusSuccess: 'Your sample is ready. Opening the private viewer now.',
                 statusFallback: 'Your package is ready. Email delivery is delayed, but the viewer can open immediately.',
                 statusUsed: 'Your free sample has already been used. You can continue to paid delivery below.',
                 statusSubscriber: 'You are already subscribed. We can open your paid delivery flow below.',
                 statusMissing: 'This page needs a sample request from the landing page first.',
                 statusError: 'We could not prepare the sample right now.',
-                asideKicker: 'Sample request',
-                asideTitle: 'This is the package we are preparing.',
+                asideKicker: 'Runtime',
+                asideTitle: 'Live request',
                 marketLabel: 'Market',
                 languageLabel: 'Delivery language',
                 audienceLabel: 'Audience focus',
-                asideNote: 'As usage grows, the same market-language-audience combination will usually already exist for the day, which means this page becomes a near-instant handoff instead of a fresh generation.',
+                asideNote: 'If this market-language-audience combination already exists today, handoff is almost instant. New combinations take a little longer.',
                 market: {
                     'new-york': 'New York',
                     'long-island': 'Long Island',
@@ -448,31 +475,31 @@
                 backButton: 'Back',
             },
             zh: {
-                title: 'REscript | 正在准备你的 Sample',
-                brandText: 'REscript · 地产经纪人内容工作台',
-                eyebrow: '正在生成你的 sample',
-                heading: '正在构建你的<span class="accent">私有 viewer</span>。',
-                intro: '我们会先检查今天是否已有匹配内容，再决定复用还是现生成，并准备好你的私有链接。',
-                phaseTitle0: '检查今天是否已有匹配内容',
-                phaseCopy0: '如果今天已经生成过同样的市场、语言和受众组合，我们会优先复用，打开更快。',
-                phaseTitle1: '生成本地脚本',
-                phaseCopy1: '如果今天还没有新鲜匹配结果，我们会现场生成 1 条本地新闻和常青模块内容。',
-                phaseTitle2: '准备私有访问链接',
-                phaseCopy2: '同一个 viewer link 会在当前页面打开，也会同步发到你的邮箱里方便后续复看。',
-                statusStarting: '正在启动你的即时 sample...',
-                statusWorking: '你的 sample 正在准备中，请保持当前页面打开。',
+                title: 'REscript | 正在生成 Sample',
+                brandText: 'REscript · sample runtime',
+                eyebrow: '实时生成中',
+                heading: 'Agent 正在<span class="accent">思考</span>。',
+                intro: '正在为你构建私有脚本包，通常需要 45 到 90 秒。',
+                phaseTitle0: '检查缓存',
+                phaseCopy0: '如果今天已有匹配内容，会直接复用更快打开。',
+                phaseTitle1: '生成脚本',
+                phaseCopy1: '正在生成本地新闻角度和匹配的常青模块。',
+                phaseTitle2: '打开 viewer',
+                phaseCopy2: '正在准备你的私有链接，并同步发送到邮箱。',
+                statusStarting: '正在启动 sample runtime...',
+                statusWorking: 'Agent 正在思考，请保持当前页面打开。',
                 statusSuccess: '你的 sample 已经准备好，正在打开私有 viewer。',
                 statusFallback: '内容包已经准备好。邮件送达稍慢，但 viewer 会立即打开。',
                 statusUsed: '你的免费 sample 已领取过。你可以直接继续开启付费交付。',
                 statusSubscriber: '你已经是订阅用户了。我们可以直接带你进入正式交付链路。',
                 statusMissing: '这个页面需要从首页提交 sample 请求后再进入。',
                 statusError: '当前无法完成 sample 生成，请稍后再试。',
-                asideKicker: '本次请求',
-                asideTitle: '这是我们正在为你准备的内容包。',
+                asideKicker: '运行状态',
+                asideTitle: '本次请求',
                 marketLabel: '市场',
                 languageLabel: '交付语言',
                 audienceLabel: '受众画像',
-                asideNote: '当用户量足够大时，同一个市场 + 语言 + 受众组合通常当天已经生成过一次，这个页面就会更像“秒开交接页”，而不是每次都重新生成。',
+                asideNote: '如果这个市场 + 语言 + 受众组合今天已经生成过，通常会更快打开；新组合会稍慢一些。',
                 market: {
                     'new-york': '纽约',
                     'long-island': '纽约州长岛',
