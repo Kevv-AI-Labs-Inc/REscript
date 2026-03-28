@@ -44,6 +44,7 @@ export interface Client {
     stripeSubscriptionStatus?: string;
     stripeCancelAtPeriodEnd?: boolean;
     stripeCurrentPeriodEnd?: string;
+    personalizationKeywords: string[];
 }
 
 type ClientUpdate = Partial<Omit<Client, 'id' | 'createdAt'>>;
@@ -53,6 +54,37 @@ const SUPPORTED_MARKET_SET = new Set<MarketId>(SUPPORTED_MARKETS.map((market) =>
 const PLAN_SET = new Set<ClientPlan>(['free', 'subscriber', 'vip']);
 const AUDIENCE_SET = new Set<AudienceProfile>(['general', 'chinese-community']);
 const BILLING_INTERVAL_SET = new Set<BillingInterval>(['month', 'year']);
+const MAX_PERSONALIZATION_KEYWORDS = 8;
+
+export function normalizePersonalizationKeywords(input: unknown): string[] {
+    const rawValues = Array.isArray(input)
+        ? input
+        : typeof input === 'string'
+            ? input.split(',')
+            : [];
+
+    const unique = new Set<string>();
+    const normalized: string[] = [];
+
+    for (const value of rawValues) {
+        const keyword = String(value || '').trim().toLowerCase();
+        if (keyword.length < 2 || keyword.length > 40) {
+            continue;
+        }
+        if (unique.has(keyword)) {
+            continue;
+        }
+
+        unique.add(keyword);
+        normalized.push(keyword);
+
+        if (normalized.length >= MAX_PERSONALIZATION_KEYWORDS) {
+            break;
+        }
+    }
+
+    return normalized;
+}
 
 function ensureDataFile(): void {
     ensureDirSync(DATA_DIR);
@@ -114,6 +146,7 @@ function migrateClient(input: any): Client {
         stripeSubscriptionStatus: input.stripeSubscriptionStatus || undefined,
         stripeCancelAtPeriodEnd: Boolean(input.stripeCancelAtPeriodEnd),
         stripeCurrentPeriodEnd: input.stripeCurrentPeriodEnd || undefined,
+        personalizationKeywords: normalizePersonalizationKeywords(input.personalizationKeywords),
     };
 }
 
@@ -185,6 +218,9 @@ function sanitizeUpdate(current: Client, data: ClientUpdate): Client {
     if (Object.prototype.hasOwnProperty.call(data, 'stripeCurrentPeriodEnd')) {
         next.stripeCurrentPeriodEnd = data.stripeCurrentPeriodEnd || undefined;
     }
+    if (Object.prototype.hasOwnProperty.call(data, 'personalizationKeywords')) {
+        next.personalizationKeywords = normalizePersonalizationKeywords(data.personalizationKeywords);
+    }
 
     return next;
 }
@@ -222,7 +258,14 @@ export function findByStripeCustomerId(stripeCustomerId: string): Client | undef
     return readClients().find((client) => client.stripeCustomerId === stripeCustomerId);
 }
 
-export function addClient(data: { name?: string; email: string; language?: Language; market?: MarketId; audienceProfile?: AudienceProfile }): Client {
+export function addClient(data: {
+    name?: string;
+    email: string;
+    language?: Language;
+    market?: MarketId;
+    audienceProfile?: AudienceProfile;
+    personalizationKeywords?: string[] | string;
+}): Client {
     const clients = readClients();
     const email = data.email.trim().toLowerCase();
     assertUniqueEmail(clients, email);
@@ -241,6 +284,7 @@ export function addClient(data: { name?: string; email: string; language?: Langu
         audienceProfile: normalizeAudienceProfile(data.audienceProfile, language),
         plan: 'free',
         freeTrialUsed: false,
+        personalizationKeywords: normalizePersonalizationKeywords(data.personalizationKeywords),
     };
 
     clients.push(client);

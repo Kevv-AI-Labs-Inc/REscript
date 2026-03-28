@@ -1,6 +1,7 @@
 import nodemailer from 'nodemailer';
 import { Resend } from 'resend';
 import { config } from '../config/index.js';
+import { personalizeOutputForClient, type DeliveryPersonalization } from '../personalization/delivery-personalization.js';
 import { logger } from '../utils/logger.js';
 import { createManageToken, createViewerToken } from '../utils/access-links.js';
 import { escapeHtml, escapeHtmlWithBreaks, safeHttpUrl } from '../utils/html.js';
@@ -223,6 +224,7 @@ function buildEmailHTML(
     dateLabel: string,
     isTrial = false,
     subscribeUrl?: string,
+    personalization?: DeliveryPersonalization,
 ): string {
     const language = client.language;
     const marketLabel = getMarketLabel(output.market, language);
@@ -239,6 +241,8 @@ function buildEmailHTML(
         ? `<p style="margin: 6px 0 0; color: #64748b;">${escapeHtml(config.COMPANY_ADDRESS)}</p>`
         : '';
     const safeSubscribeUrl = subscribeUrl ? safeHttpUrl(subscribeUrl) : null;
+    const personalizationSummary = personalization?.focusSummary;
+    const ctaHint = personalization?.ctaHint;
     const packageTitle = client.audienceProfile === 'chinese-community'
         ? t(language, '今天的双语社群内容包已就绪', 'Your bilingual community content package is ready')
         : t(language, 'Today’s market desk is ready', 'Your market desk is ready');
@@ -295,6 +299,15 @@ function buildEmailHTML(
         <a href="${safeSubscribeUrl}" style="display: inline-block; background: white; color: ${theme.accent}; padding: 14px 36px; border-radius: 999px; text-decoration: none; font-size: 16px; font-weight: 700;">${t(language, '立即订阅', 'Subscribe now')}</a>
       </div>` : '';
 
+    const personalizationPanel = personalizationSummary ? `
+      <div style="padding: 0 28px 14px;">
+        <div style="padding: 16px 18px; border-radius: 18px; background: rgba(255,255,255,0.76); border: 1px solid ${theme.panelBorder};">
+          <div style="font-size: 11px; letter-spacing: 0.08em; text-transform: uppercase; color: ${theme.accent}; font-weight: 700;">${t(language, '今日优先关注', 'Priority focus today')}</div>
+          <div style="margin-top: 8px; color: #17212b; font-size: 14px; line-height: 1.7;">${escapeHtml(personalizationSummary)}</div>
+          ${ctaHint ? `<div style="margin-top: 8px; color: #5b6775; font-size: 12px; line-height: 1.65;">${escapeHtml(ctaHint)}</div>` : ''}
+        </div>
+      </div>` : '';
+
     return `
 <!DOCTYPE html>
 <html lang="${language === 'en' ? 'en' : 'zh-CN'}">
@@ -330,6 +343,8 @@ function buildEmailHTML(
       <p style="color: #334155; font-size: 15px; margin: 0 0 6px;">${escapeHtml(client.name)}，${t(language, '你好', 'hello')}.</p>
       <p style="color: #5b6775; font-size: 14px; line-height: 1.8; margin: 0;">${t(language, `今天已经为你整理好 ${totalScripts} 条可直接拍摄的脚本，覆盖新闻热点和常青模块。`, `Today's delivery includes ${totalScripts} ready-to-film scripts across news and evergreen modules.`)}</p>
     </div>
+
+    ${personalizationPanel}
 
     ${trialNotice}
 
@@ -375,15 +390,26 @@ function buildEmailHTML(
 </html>`;
 }
 
-function buildSubject(client: Client, output: DailyOutput, dateLabel: string, isTrial: boolean): string {
+function buildSubject(
+    client: Client,
+    output: DailyOutput,
+    dateLabel: string,
+    isTrial: boolean,
+    personalization?: DeliveryPersonalization,
+): string {
     const marketLabel = getMarketLabel(output.market, client.language);
     const audienceTag = client.audienceProfile === 'chinese-community'
         ? t(client.language, '社群向', 'Community')
         : t(client.language, '市场向', 'Market');
+    const keywordSummary = personalization?.subjectKeywords?.join(' / ') || '';
     const core = t(
         client.language,
-        `${dateLabel} · ${marketLabel} ${audienceTag}内容包已就绪`,
-        `${dateLabel} · ${marketLabel} ${audienceTag} scripts are ready`,
+        keywordSummary
+            ? `${dateLabel} · ${marketLabel} ${keywordSummary} 内容已就绪`
+            : `${dateLabel} · ${marketLabel} ${audienceTag}内容包已就绪`,
+        keywordSummary
+            ? `${dateLabel} · ${marketLabel} ${keywordSummary} scripts are ready`
+            : `${dateLabel} · ${marketLabel} ${audienceTag} scripts are ready`,
     );
     const trialTag = isTrial ? t(client.language, ' [免费Sample]', ' [Sample]') : '';
     return `${getSubjectPrefix(client.language)} ${core}${trialTag}`.trim();
@@ -408,8 +434,9 @@ async function sendEmail(
     const manageToken = createManageToken(client);
     const viewerUrl = `${baseUrl}/view.html?key=${encodeURIComponent(output.key)}&token=${encodeURIComponent(viewerToken)}`;
     const manageUrl = `${baseUrl}/manage.html?token=${encodeURIComponent(manageToken)}`;
-    const subject = buildSubject(client, output, dateLabel, isTrial);
-    const html = buildEmailHTML(client, output, viewerUrl, manageUrl, dateLabel, isTrial, subscribeUrl);
+    const personalized = personalizeOutputForClient(client, output, { includeFree: false });
+    const subject = buildSubject(client, personalized.output, dateLabel, isTrial, personalized);
+    const html = buildEmailHTML(client, personalized.output, viewerUrl, manageUrl, dateLabel, isTrial, subscribeUrl, personalized);
 
     if (dryRun) {
         logger.info(`📧 [DRY RUN] Would send to ${client.name} <${client.email}> (${isTrial ? 'sample' : client.plan})`);

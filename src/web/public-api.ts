@@ -1,6 +1,7 @@
 import { Router, Request, Response } from 'express';
 import { z } from 'zod';
-import { getClientById, SUPPORTED_MARKETS, updateClient, type MarketId } from '../store/client-store.js';
+import { personalizeOutputForClient } from '../personalization/delivery-personalization.js';
+import { getClientById, normalizePersonalizationKeywords, SUPPORTED_MARKETS, updateClient, type MarketId } from '../store/client-store.js';
 import { getDailyOutput } from '../store/output-store.js';
 import { verifyManageToken, verifyViewerToken } from '../utils/access-links.js';
 
@@ -13,6 +14,9 @@ const preferencesSchema = z.object({
     market: z.string().transform((value) => (
         marketIds.includes(value) ? value : 'new-york'
     ) as MarketId),
+    personalizationKeywords: z.union([z.string(), z.array(z.string())]).optional().transform((value) => (
+        value === undefined ? undefined : normalizePersonalizationKeywords(value)
+    )),
 });
 
 function getTokenFromRequest(req: Request): string {
@@ -40,12 +44,17 @@ router.get('/viewer/outputs/:key', (req: Request, res: Response) => {
         return;
     }
 
+    const personalized = personalizeOutputForClient(client, output);
+
     res.json({
         success: true,
-        data: output,
+        data: personalized.output,
         viewerContext: {
             showUpgradeCta: client.plan === 'free',
             plan: client.plan,
+            personalizationKeywords: personalized.personalizationKeywords,
+            focusSummary: personalized.focusSummary,
+            ctaHint: personalized.ctaHint,
         },
     });
 });
@@ -76,6 +85,7 @@ router.get('/subscription/status', (req: Request, res: Response) => {
             language: client.language,
             audienceProfile: client.audienceProfile,
             hasBilling: Boolean(client.stripeCustomerId),
+            personalizationKeywords: client.personalizationKeywords,
         },
     });
 });
@@ -123,7 +133,7 @@ router.post('/subscription/preferences', (req: Request, res: Response) => {
         return;
     }
 
-    const { token, language, market, audienceProfile } = parsed.data;
+    const { token, language, market, audienceProfile, personalizationKeywords } = parsed.data;
     const verified = verifyManageToken(token);
     if (!verified) {
         res.status(401).json({ success: false, error: 'Invalid or expired manage link' });
@@ -136,7 +146,12 @@ router.post('/subscription/preferences', (req: Request, res: Response) => {
         return;
     }
 
-    const updated = updateClient(client.id, { language, market, audienceProfile });
+    const updated = updateClient(client.id, {
+        language,
+        market,
+        audienceProfile,
+        ...(personalizationKeywords !== undefined ? { personalizationKeywords } : {}),
+    });
     res.json({
         success: true,
         data: {
@@ -149,6 +164,7 @@ router.post('/subscription/preferences', (req: Request, res: Response) => {
             language: updated.language,
             audienceProfile: updated.audienceProfile,
             hasBilling: Boolean(updated.stripeCustomerId),
+            personalizationKeywords: updated.personalizationKeywords,
         },
     });
 });

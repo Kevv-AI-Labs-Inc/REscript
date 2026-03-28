@@ -69,7 +69,7 @@ const modules: ModuleDefinition[] = [
             en: 'Offer strategy, financing readiness, and confidence-building buyer education.',
             zh: '围绕出价、贷款准备和买家决策信心建立的内容模块。',
         },
-        topicsPerDay: 2,
+        topicsPerDay: 1,
         audiences: ['all'],
         topics: [
             {
@@ -124,7 +124,7 @@ const modules: ModuleDefinition[] = [
             en: 'Pricing, prep, launch strategy, and seller-facing market expectations.',
             zh: '围绕定价、上市准备、launch 节奏和卖家预期管理的模块。',
         },
-        topicsPerDay: 2,
+        topicsPerDay: 1,
         audiences: ['all'],
         topics: [
             {

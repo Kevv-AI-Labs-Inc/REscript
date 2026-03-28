@@ -1,6 +1,6 @@
 import { Router, Request, Response } from 'express';
 import { z } from 'zod';
-import { getAllClients, addClient, getClientById, updateClient, deleteClient, SUPPORTED_MARKETS } from '../store/client-store.js';
+import { getAllClients, addClient, getClientById, normalizePersonalizationKeywords, updateClient, deleteClient, SUPPORTED_MARKETS } from '../store/client-store.js';
 import { getDailyOutput, listOutputs } from '../store/output-store.js';
 import { runPipeline, isPipelineRunning } from '../orchestrator.js';
 import { getPipelineMetricsSnapshot } from '../store/pipeline-metrics-store.js';
@@ -18,6 +18,9 @@ const clientCreateSchema = z.object({
         const ids = SUPPORTED_MARKETS.map((market) => market.id);
         return (ids.includes(value as typeof ids[number]) ? value : 'new-york') as typeof ids[number];
     }).default('new-york'),
+    personalizationKeywords: z.union([z.string(), z.array(z.string())]).optional().transform((value) => (
+        value === undefined ? undefined : normalizePersonalizationKeywords(value)
+    )),
 });
 
 const clientUpdateSchema = z.object({
@@ -32,6 +35,9 @@ const clientUpdateSchema = z.object({
     }).optional(),
     plan: z.enum(['free', 'subscriber', 'vip']).optional(),
     freeTrialUsed: z.boolean().optional(),
+    personalizationKeywords: z.union([z.string(), z.array(z.string())]).optional().transform((value) => (
+        value === undefined ? undefined : normalizePersonalizationKeywords(value)
+    )),
 }).refine((data) => Object.keys(data).length > 0, 'At least one field is required');
 
 router.get('/clients', (_req: Request, res: Response) => {

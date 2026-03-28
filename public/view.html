@@ -156,6 +156,19 @@
             color: rgba(255, 255, 255, 0.84);
         }
 
+        .focus-note {
+            display: none;
+            max-width: 620px;
+            margin-top: 14px;
+            padding: 12px 14px;
+            border-radius: 14px;
+            background: rgba(255, 255, 255, 0.16);
+            border: 1px solid rgba(255, 255, 255, 0.18);
+            color: rgba(255, 255, 255, 0.92);
+            font-size: 14px;
+            line-height: 1.7;
+        }
+
         .hero-meta {
             display: flex;
             flex-wrap: wrap;
@@ -686,6 +699,7 @@
                     <h1 id="pageTitle">Your private content desk is loading.</h1>
                     <p id="heroSubtitle">REscript is preparing your market-specific script package and applying the
                         right audience lens before you review or copy anything.</p>
+                    <p class="focus-note" id="focusSummary"></p>
                     <div class="hero-meta" id="heroMeta"></div>
                 </div>
                 <div class="stat-grid">
@@ -1050,6 +1064,24 @@
             renderHeroMeta(data);
         }
 
+        function renderFocusSummary(viewerContext) {
+            const note = document.getElementById('focusSummary');
+            if (!viewerContext?.focusSummary) {
+                note.style.display = 'none';
+                note.textContent = '';
+                return;
+            }
+
+            note.textContent = uiLanguage === 'en'
+                ? `Sorted for your focus: ${viewerContext.focusSummary}`
+                : `已按你的重点排序：${viewerContext.focusSummary}`;
+            note.style.display = 'block';
+
+            if (viewerContext.ctaHint) {
+                document.getElementById('briefCopyTwo').textContent = viewerContext.ctaHint;
+            }
+        }
+
         function copyScript(sectionIndex, articleIndex, scriptIndex) {
             const section = allSections[sectionIndex];
             const article = section.articles[articleIndex];
@@ -1188,6 +1220,7 @@
                 uiLanguage = data.language === 'zh' ? 'zh' : 'en';
                 applyTheme(data.audienceProfile);
                 renderHeroCopy(data);
+                renderFocusSummary(result.viewerContext || {});
 
                 const moduleScripts = (data.modules || []).reduce((sum, module) => (
                     sum + module.articles.reduce((inner, article) => inner + article.scripts.length, 0)

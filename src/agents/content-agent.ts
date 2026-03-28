@@ -93,10 +93,10 @@ Generate 4 styles:
 
 Each script must include:
 - **hook**: Opening hook (1-2 sentences, create suspense or curiosity)
-- **content**: Main body (430-620 words, practical and easy to film, localized to ${mkt})
+- **content**: Main body (280-420 words, practical and easy to film, localized to ${mkt})
 - **cta**: Call to action (1-2 sentences, drive follow/DM/comment)
 - **platform**: Best platform (${platformOptions.map((item) => `"${item}"`).join(', ')}, cover at least 3 platforms)
-- **duration**: Fixed "150 seconds" (about 2.5 minutes)
+- **duration**: Fixed "100 seconds" (about 1.5 minutes)
 - **tags**: 5-7 hashtags
 
 Output requirements:
@@ -106,10 +106,10 @@ Output requirements:
 
 Return ONLY JSON array (no markdown code blocks):
 [
-  {"style":"professional","styleName":"Professional Analysis","platform":"${platformFour}","duration":"150 seconds","hook":"...","content":"...","cta":"...","tags":[...]},
-  {"style":"casual","styleName":"Casual Chat","platform":"${platformOne}","duration":"150 seconds","hook":"...","content":"...","cta":"...","tags":[...]},
-  {"style":"investor","styleName":"Investor Advisor","platform":"${platformThree}","duration":"150 seconds","hook":"...","content":"...","cta":"...","tags":[...]},
-  {"style":"mythbuster","styleName":"Myth Buster","platform":"${platformTwo}","duration":"150 seconds","hook":"...","content":"...","cta":"...","tags":[...]}
+  {"style":"professional","styleName":"Professional Analysis","platform":"${platformFour}","duration":"100 seconds","hook":"...","content":"...","cta":"...","tags":[...]},
+  {"style":"casual","styleName":"Casual Chat","platform":"${platformOne}","duration":"100 seconds","hook":"...","content":"...","cta":"...","tags":[...]},
+  {"style":"investor","styleName":"Investor Advisor","platform":"${platformThree}","duration":"100 seconds","hook":"...","content":"...","cta":"...","tags":[...]},
+  {"style":"mythbuster","styleName":"Myth Buster","platform":"${platformTwo}","duration":"100 seconds","hook":"...","content":"...","cta":"...","tags":[...]}
 ]`;
     }
 
@@ -146,10 +146,10 @@ ${guardrails}
 
 每种文案必须包含：
 - **hook**: 开场钩子（1-2句，制造悬念或好奇心）
-- **content**: 主要内容（650-950字，实操、易拍摄，并适配${mkt}）
+- **content**: 主要内容（450-650字，实操、易拍摄，并适配${mkt}）
 - **cta**: 行动号召（1-2句，引导关注/私信/评论）
 - **platform**: 适合的平台（${platformOptions.map((item) => `"${item}"`).join('、')}，4条至少覆盖3个平台）
-- **duration**: 固定为 "150秒"（约2分30秒）
+- **duration**: 固定为 "100秒"（约1分40秒）
 - **tags**: 5-7个话题标签
 
 额外要求：
@@ -159,10 +159,10 @@ ${guardrails}
 
 请严格返回 JSON 数组格式（不要 markdown 代码块）：
 [
-  {"style":"professional","styleName":"专业分析型","platform":"${platformFour}","duration":"150秒","hook":"...","content":"...","cta":"...","tags":[...]},
-  {"style":"casual","styleName":"轻松聊天型","platform":"${platformOne}","duration":"150秒","hook":"...","content":"...","cta":"...","tags":[...]},
-  {"style":"investor","styleName":"投资顾问型","platform":"${platformThree}","duration":"150秒","hook":"...","content":"...","cta":"...","tags":[...]},
-  {"style":"mythbuster","styleName":"犀利避坑/揭秘型","platform":"${platformTwo}","duration":"150秒","hook":"...","content":"...","cta":"...","tags":[...]}
+  {"style":"professional","styleName":"专业分析型","platform":"${platformFour}","duration":"100秒","hook":"...","content":"...","cta":"...","tags":[...]},
+  {"style":"casual","styleName":"轻松聊天型","platform":"${platformOne}","duration":"100秒","hook":"...","content":"...","cta":"...","tags":[...]},
+  {"style":"investor","styleName":"投资顾问型","platform":"${platformThree}","duration":"100秒","hook":"...","content":"...","cta":"...","tags":[...]},
+  {"style":"mythbuster","styleName":"犀利避坑/揭秘型","platform":"${platformTwo}","duration":"100秒","hook":"...","content":"...","cta":"...","tags":[...]}
 ]`;
 }
 

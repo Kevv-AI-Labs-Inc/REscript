@@ -287,6 +287,24 @@
             font: inherit;
         }
 
+        .field input {
+            width: 100%;
+            min-width: 0;
+            min-height: 46px;
+            padding: 0 12px;
+            border-radius: 14px;
+            border: 1px solid var(--line);
+            background: rgba(255,255,255,0.94);
+            color: var(--ink);
+            font: inherit;
+        }
+
+        .field small {
+            color: var(--muted);
+            font-size: 0.8rem;
+            line-height: 1.6;
+        }
+
         @media (max-width: 1024px) {
             .grid { grid-template-columns: 1fr; }
         }
@@ -362,6 +380,7 @@
                     <div class="detail"><span class="detail-label" id="languageLabel">Delivery language</span><span class="detail-value" id="languageValue"></span></div>
                     <div class="detail"><span class="detail-label" id="marketLabel">Primary market</span><span class="detail-value" id="marketValue"></span></div>
                     <div class="detail"><span class="detail-label" id="audienceLabel">Audience focus</span><span class="detail-value" id="audienceValue"></span></div>
+                    <div class="detail" id="keywordsDetailRow" style="display:none;"><span class="detail-label" id="keywordsLabel">Priority keywords</span><span class="detail-value" id="keywordsValue"></span></div>
                 </div>
                 <div class="prefs-box" id="prefsBox" style="display:none;">
                     <p id="prefsCopy">Update these preferences if you want future deliveries to follow a different market, delivery language, or audience focus.</p>
@@ -377,6 +396,11 @@
                         <label class="field">
                             <span id="prefAudienceLabel">Audience focus</span>
                             <select id="prefAudience"></select>
+                        </label>
+                        <label class="field" id="keywordField" style="display:none;">
+                            <span id="prefKeywordsLabel">Priority keywords</span>
+                            <input id="prefKeywords" type="text" placeholder="school district, relocation, downsizing">
+                            <small id="prefKeywordsHelp">Comma-separated keywords. These change the subject line, top summary, and content order without generating a separate package.</small>
                         </label>
                     </div>
                     <button class="secondary" id="savePrefsBtn" onclick="savePreferences()">Save preferences</button>
@@ -416,10 +440,13 @@
                 languageLabel: 'Delivery language',
                 marketLabel: 'Primary market',
                 audienceLabel: 'Audience focus',
+                keywordsLabel: 'Priority keywords',
                 prefsCopy: 'Update these preferences if you want future deliveries to follow a different market, delivery language, or audience focus.',
                 prefLanguageLabel: 'Delivery language',
                 prefMarketLabel: 'Primary market',
                 prefAudienceLabel: 'Audience focus',
+                prefKeywordsLabel: 'Priority keywords',
+                prefKeywordsHelp: 'Comma-separated keywords. These affect the subject line, top summary, and content order without generating a separate package.',
                 actionsTitle: 'Actions',
                 actionsCopy: 'Use these controls to pause delivery, resume delivery, or open billing.',
                 savePrefsBtn: 'Save preferences',
@@ -447,6 +474,7 @@
                         pageCopy: 'This page is tied to your private REscript access link. Use it to manage a mainstream North American delivery workflow for buyer-seller education, market commentary, and agent-brand content.',
                         detailsCopy: 'These settings keep your market-desk delivery aligned to the market, language, and general North American audience profile attached to your account.',
                         prefsCopy: 'Update these preferences if you want future deliveries to shift between markets, languages, or audience lenses for the clients you actually serve.',
+                        prefKeywordsHelp: 'Use keywords like school district, relocation, seller timing, or investor rent math to bias the order and summary for your inbox.',
                         actionsCopy: 'Use these controls to pause delivery, resume delivery, or open billing while keeping your mainstream market workflow in sync.',
                         helperCopy: 'Pausing delivery stops the daily email. It does not automatically cancel billing unless you manage the plan inside Stripe.',
                         savePrefsSuccess: 'Delivery preferences updated. Future runs will follow the new market, language, and mainstream audience settings.',
@@ -455,6 +483,7 @@
                         pageCopy: 'This page is tied to your private REscript access link. Use it to manage a bilingual community-delivery workflow for Chinese-speaking households, relocation content, and trust-building education.',
                         detailsCopy: 'These settings keep your community-desk delivery aligned to the market, language, and Chinese-speaking / relocation audience profile attached to your account.',
                         prefsCopy: 'Update these preferences if you want future deliveries to shift between markets, languages, or audience lenses as your bilingual and relocation mix changes.',
+                        prefKeywordsHelp: 'Use keywords like relocation, school district, bilingual education, or move-up buyers to push those topics to the top.',
                         actionsCopy: 'Use these controls to pause delivery, resume delivery, or open billing while keeping your bilingual community workflow in sync.',
                         helperCopy: 'Pausing delivery stops the daily email. It does not automatically cancel billing unless you manage the plan inside Stripe. If your audience mix changes, update the audience focus here before the next run.',
                         savePrefsSuccess: 'Delivery preferences updated. Future runs will follow the new market, language, and community-oriented audience settings.',
@@ -491,10 +520,13 @@
                 languageLabel: '交付语言',
                 marketLabel: '主要市场',
                 audienceLabel: '受众画像',
+                keywordsLabel: '个性化关键词',
                 prefsCopy: '如果你想让之后的交付跟随不同的市场、语言或受众画像，可以直接在这里修改。',
                 prefLanguageLabel: '交付语言',
                 prefMarketLabel: '主要市场',
                 prefAudienceLabel: '受众画像',
+                prefKeywordsLabel: '个性化关键词',
+                prefKeywordsHelp: '用逗号分隔关键词。它会影响邮件主题、顶部摘要和内容排序，但不会单独重新生成一整套内容。',
                 actionsTitle: '可执行操作',
                 actionsCopy: '你可以在这里暂停投递、恢复投递，或打开账单管理。',
                 savePrefsBtn: '保存偏好',
@@ -522,6 +554,7 @@
                         pageCopy: '这个页面绑定的是你的私有 REscript 访问链接。你可以在这里管理更偏主流北美买卖家教育、市场点评和经纪人品牌内容的交付节奏。',
                         detailsCopy: '这些设置会让你的市场内容台继续对齐你账户里的市场、语言和主流北美客户受众画像。',
                         prefsCopy: '如果你想让之后的交付在市场、语言或 audience 模式之间切换，可以直接在这里修改。',
+                        prefKeywordsHelp: '例如 school district、relocation、seller timing、investor rent math。系统会优先把这些方向排到前面。',
                         actionsCopy: '你可以在这里暂停投递、恢复投递，或打开账单管理，同时保持主流市场内容工作流一致。',
                         helperCopy: '暂停投递只会停止每日邮件，不会自动取消扣费。若要取消订阅，请在 Stripe 内部管理你的方案。',
                         savePrefsSuccess: '偏好已更新，之后的生成和投递会按新的市场、语言和主流北美受众模式执行。',
@@ -530,6 +563,7 @@
                         pageCopy: '这个页面绑定的是你的私有 REscript 访问链接。你可以在这里管理更偏华语家庭、搬迁需求、双语教育和社区信任建立的交付节奏。',
                         detailsCopy: '这些设置会让你的社群内容台继续对齐你账户里的市场、语言和华语 / 搬迁家庭受众画像。',
                         prefsCopy: '如果你想让之后的交付在市场、语言或 audience 模式之间切换，适配新的双语或搬迁客户结构，可以直接在这里修改。',
+                        prefKeywordsHelp: '例如 relocation、school district、双语教育、move-up buyers。系统会把这些关键词相关内容排得更靠前。',
                         actionsCopy: '你可以在这里暂停投递、恢复投递，或打开账单管理，同时保持双语社群内容工作流一致。',
                         helperCopy: '暂停投递只会停止每日邮件，不会自动取消扣费。若要取消订阅，请在 Stripe 内部管理你的方案。如果你的客户结构变化了，也记得先更新 audience 模式。',
                         savePrefsSuccess: '偏好已更新，之后的生成和投递会按新的市场、语言和华语 / 搬迁家庭模式执行。',
@@ -596,6 +630,7 @@
             setText('prefsCopy', narrative.prefsCopy);
             setText('actionsCopy', narrative.actionsCopy);
             setText('helperCopy', narrative.helperCopy);
+            setText('prefKeywordsHelp', narrative.prefKeywordsHelp || ui.prefKeywordsHelp);
         }
 
         function setLang(nextLang) {
@@ -613,9 +648,11 @@
             setText('languageLabel', ui.languageLabel);
             setText('marketLabel', ui.marketLabel);
             setText('audienceLabel', ui.audienceLabel);
+            setText('keywordsLabel', ui.keywordsLabel);
             setText('prefLanguageLabel', ui.prefLanguageLabel);
             setText('prefMarketLabel', ui.prefMarketLabel);
             setText('prefAudienceLabel', ui.prefAudienceLabel);
+            setText('prefKeywordsLabel', ui.prefKeywordsLabel);
             setText('actionsTitle', ui.actionsTitle);
             setText('savePrefsBtn', ui.savePrefsBtn);
             setText('pauseBtn', ui.pauseBtn);
@@ -666,9 +703,14 @@
             document.getElementById('languageValue').textContent = localizeLanguage(data.language);
             document.getElementById('marketValue').textContent = localizeMarket(data.market);
             document.getElementById('audienceValue').textContent = localizeAudience(data.audienceProfile);
+            const keywords = Array.isArray(data.personalizationKeywords) ? data.personalizationKeywords : [];
+            document.getElementById('keywordsValue').textContent = keywords.length ? keywords.join(', ') : '—';
             document.getElementById('prefLanguage').value = data.language;
             document.getElementById('prefMarket').value = data.market;
             document.getElementById('prefAudience').value = data.audienceProfile;
+            document.getElementById('prefKeywords').value = keywords.join(', ');
+            document.getElementById('keywordsDetailRow').style.display = data.plan === 'free' ? 'none' : 'flex';
+            document.getElementById('keywordField').style.display = data.plan === 'free' ? 'none' : 'grid';
 
             const badge = document.getElementById('statusBadge');
             badge.textContent = data.active ? getUi().statusActive : getUi().statusPaused;
@@ -716,6 +758,7 @@
                     language: document.getElementById('prefLanguage').value,
                     market: document.getElementById('prefMarket').value,
                     audienceProfile: document.getElementById('prefAudience').value,
+                    personalizationKeywords: document.getElementById('prefKeywords').value,
                 }),
             });
             const result = await response.json();

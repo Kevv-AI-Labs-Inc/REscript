@@ -685,7 +685,7 @@
 
     .table {
       width: 100%;
-      min-width: 1540px;
+      min-width: 1840px;
       border-collapse: collapse;
     }
 
@@ -878,6 +878,34 @@
     .inline-select:focus {
       border-color: var(--accent);
       outline: none;
+    }
+
+    .inline-input {
+      background: rgba(9, 20, 42, 0.95);
+      border: 1px solid rgba(63, 86, 124, 0.52);
+      border-radius: 9px;
+      color: var(--text);
+      font-size: 12px;
+      padding: 8px 10px;
+      font-family: inherit;
+      width: 100%;
+      min-width: 220px;
+    }
+
+    .inline-input:focus {
+      border-color: var(--accent);
+      outline: none;
+    }
+
+    .keyword-editor {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      min-width: 0;
+    }
+
+    .keyword-editor .subtle-line {
+      max-width: 300px;
     }
 
     .view-switch {
@@ -1281,7 +1309,7 @@
           <div class="card-header">
             <div>
               <div class="card-title">今日 Pipeline Tokens / Cost</div>
-              <div class="card-subtitle" id="telemetryPricingNote">如果未配置 Azure 单价，这里只显示真实 tokens，不显示美元估算。</div>
+              <div class="card-subtitle" id="telemetryPricingNote">如果未配置 Azure 单价，这里只显示真实 tokens；请在 Railway 配置 AZURE_INPUT_COST_PER_1M / AZURE_OUTPUT_COST_PER_1M。</div>
             </div>
           </div>
           <div class="telemetry-kpi-grid">
@@ -1303,7 +1331,7 @@
             <div class="telemetry-kpi">
               <div class="telemetry-kpi-label">Estimated Cost</div>
               <div class="telemetry-kpi-value" id="todayEstimatedCost">—</div>
-              <div class="telemetry-kpi-note" id="todayEstimatedCostNote">配置单价后显示美元预估</div>
+              <div class="telemetry-kpi-note" id="todayEstimatedCostNote">请在 Railway 配置 Azure 单价后显示美元预估</div>
             </div>
             <div class="telemetry-kpi">
               <div class="telemetry-kpi-label">LLM Calls</div>
@@ -1619,13 +1647,13 @@
       document.getElementById('todayEstimatedCost').textContent = formatUsd(today.estimatedCostUsd, pricing.costConfigured);
       document.getElementById('todayEstimatedCostNote').textContent = pricing.costConfigured
         ? `按 $${Number(pricing.inputCostPer1M || 0).toFixed(2)} / 1M input + $${Number(pricing.outputCostPer1M || 0).toFixed(2)} / 1M output`
-        : '配置 AZURE_INPUT_COST_PER_1M / AZURE_OUTPUT_COST_PER_1M 后显示美元预估';
+        : '请在 Railway 配置 AZURE_INPUT_COST_PER_1M / AZURE_OUTPUT_COST_PER_1M 后显示美元预估';
       document.getElementById('todayCallCount').textContent = formatInt(today.calls);
       document.getElementById('todayRunCount').textContent = formatInt(today.runCount);
       document.getElementById('todayEmailCountNote').textContent = `${formatInt(today.emailSent)} sent · ${formatInt(today.emailFailed)} failed`;
       document.getElementById('telemetryPricingNote').textContent = pricing.costConfigured
         ? '成本按 Azure 单价实时估算；tokens 来自模型真实 usage。'
-        : 'tokens 来自模型真实 usage；想看美元预估，请配置 Azure 单价。';
+        : 'tokens 来自模型真实 usage；想看美元预估，请在 Railway 配置 AZURE_INPUT_COST_PER_1M / AZURE_OUTPUT_COST_PER_1M。';
 
       const liveOrDailyGroups = currentRun?.groups?.length
         ? currentRun.groups
@@ -1820,6 +1848,13 @@
         <option value="general" ${c.audienceProfile === 'general' ? 'selected' : ''}>广义北美</option>
         <option value="chinese-community" ${c.audienceProfile === 'chinese-community' ? 'selected' : ''}>华语/搬迁</option>
       </select>`;
+      const keywordEditor = (c) => `<div class="keyword-editor">
+        <input class="inline-input" id="kw-${c.id}" type="text" value="${escapeHtml((c.personalizationKeywords || []).join(', '))}" placeholder="school district, relocation, downsizing">
+        <div class="row-actions">
+          <button class="btn btn-ghost btn-sm" onclick="saveKeywords('${c.id}')">保存关键词</button>
+        </div>
+        <div class="subtle-line">最多 8 个，逗号分隔。影响主题、摘要、内容排序和 viewer 高亮。</div>
+      </div>`;
       const rows = visibleClients.map(c => {
         const sampleBadge = c.freeTrialUsed
           ? '<span class="micro-badge warm">已领 sample</span>'
@@ -1890,6 +1925,7 @@
     <td>${langSelect(c)}</td>
     <td>${mktSelect(c)}</td>
     <td>${audienceSelect(c)}</td>
+    <td>${keywordEditor(c)}</td>
     <td>
       <div class="status-stack">
         <span class="status-inline ${(c.plan !== 'free' && c.active) ? 'on' : 'off'}">${deliveryStatus}</span>
@@ -1911,7 +1947,7 @@
     </td>
   </tr>`;
       }).join('');
-      el.innerHTML = `<div class="table-wrap"><table class="table"><thead><tr><th>客户</th><th>联系 / Stripe</th><th>套餐</th><th>语言</th><th>城市</th><th>受众</th><th>发送状态</th><th>账单状态</th><th>操作</th></tr></thead><tbody>${rows}</tbody></table></div>`;
+      el.innerHTML = `<div class="table-wrap"><table class="table"><thead><tr><th>客户</th><th>联系 / Stripe</th><th>套餐</th><th>语言</th><th>城市</th><th>受众</th><th>关键词</th><th>发送状态</th><th>账单状态</th><th>操作</th></tr></thead><tbody>${rows}</tbody></table></div>`;
     }
 
     function setClientView(mode) {
@@ -1959,6 +1995,22 @@
       } catch (e) { showToast(e.message, 'error'); }
     }
 
+    async function saveKeywords(id) {
+      try {
+        const input = document.getElementById(`kw-${id}`);
+        const value = input ? input.value : '';
+        const res = await fetch(`${API}/clients/${id}`, { method: 'PUT', headers: authHeaders(), body: JSON.stringify({ personalizationKeywords: value }) });
+        if (res.status === 401) { logout(); return; }
+        const result = await res.json();
+        if (!result.success) throw new Error(result.error);
+        if (input) {
+          input.value = (result.data.personalizationKeywords || []).join(', ');
+        }
+        showToast('✅ 已更新关键词');
+        loadClients();
+      } catch (e) { showToast(e.message, 'error'); }
+    }
+
     async function deleteClient(id, name) {
       if (!confirm(`确定删除 "${name}" 的本地记录吗？如仍有 Stripe 活跃订阅，请先取消账单。`)) return;
       try {
@@ -1999,9 +2051,9 @@
       try {
         const clients = window._cachedClients || [];
         if (!clients.length) { showToast('无数据可导出', 'error'); return; }
-        const header = 'Name,Email,Plan,BillingInterval,Language,Market,Audience,Active,Created';
+        const header = 'Name,Email,Plan,BillingInterval,Language,Market,Audience,PersonalizationKeywords,Active,Created';
         const rows = clients.map(c =>
-          [c.name, c.email, c.plan, c.billingInterval || '', c.language, c.market, c.audienceProfile || 'general', c.active, c.createdAt].map(v => `"${v}"`).join(',')
+          [c.name, c.email, c.plan, c.billingInterval || '', c.language, c.market, c.audienceProfile || 'general', (c.personalizationKeywords || []).join('|'), c.active, c.createdAt].map(v => `"${v}"`).join(',')
         );
         const csv = [header, ...rows].join('\n');
         const blob = new Blob(['\uFEFF' + csv], { type: 'text/csv;charset=utf-8' });
