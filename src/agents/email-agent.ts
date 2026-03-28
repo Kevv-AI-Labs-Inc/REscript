@@ -1,4 +1,3 @@
-import nodemailer from 'nodemailer';
 import { Resend } from 'resend';
 import { config } from '../config/index.js';
 import { personalizeOutputForClient, type DeliveryPersonalization } from '../personalization/delivery-personalization.js';
@@ -69,13 +68,6 @@ interface EmailMessage {
 
 let resendClient: Resend | null = null;
 
-function createTransport() {
-    return nodemailer.createTransport({
-        service: 'gmail',
-        auth: { user: config.GMAIL_USER, pass: config.GMAIL_APP_PASSWORD },
-    });
-}
-
 function getResendClient(): Resend {
     if (!resendClient) {
         if (!config.RESEND_API_KEY) {
@@ -84,18 +76,6 @@ function getResendClient(): Resend {
         resendClient = new Resend(config.RESEND_API_KEY);
     }
     return resendClient;
-}
-
-async function sendWithGmail(message: EmailMessage): Promise<void> {
-    const transporter = createTransport();
-    await transporter.sendMail({
-        from: message.from,
-        to: `"${message.toName}" <${message.toEmail}>`,
-        replyTo: message.replyTo,
-        subject: message.subject,
-        html: message.html,
-        headers: message.headers,
-    });
 }
 
 async function sendWithResend(message: EmailMessage): Promise<void> {
@@ -115,12 +95,7 @@ async function sendWithResend(message: EmailMessage): Promise<void> {
 }
 
 async function deliverEmail(message: EmailMessage): Promise<void> {
-    if (config.EMAIL_PROVIDER === 'resend') {
-        await sendWithResend(message);
-        return;
-    }
-
-    await sendWithGmail(message);
+    await sendWithResend(message);
 }
 
 function t(language: Language, zh: string, en: string): string {
@@ -456,10 +431,10 @@ async function sendEmail(
                 'List-Unsubscribe-Post': 'List-Unsubscribe=One-Click',
             },
         });
-        logger.info(`✅ Email sent via ${config.EMAIL_PROVIDER} to ${client.name} <${client.email}> (${isTrial ? 'sample' : client.plan})`);
+        logger.info(`✅ Email sent via resend to ${client.name} <${client.email}> (${isTrial ? 'sample' : client.plan})`);
         return true;
     } catch (error) {
-        logger.error(`❌ Failed to send via ${config.EMAIL_PROVIDER} to ${client.name} <${client.email}>`, {
+        logger.error(`❌ Failed to send via resend to ${client.name} <${client.email}>`, {
             error: error instanceof Error ? error.message : String(error),
         });
         return false;

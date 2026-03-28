@@ -32,7 +32,7 @@ const allClients = getAllClients();
 logger.info('Configuration:');
 logger.info(`  Azure OpenAI: ${config.AZURE_OPENAI_ENDPOINT}`);
 logger.info(`  Model: ${config.AZURE_OPENAI_DEPLOYMENT}`);
-logger.info(`  Email provider: ${config.EMAIL_PROVIDER}`);
+logger.info('  Email provider: resend');
 logger.info(`  Email from: ${config.EMAIL_FROM_ADDRESS}`);
 logger.info(`  Clients: ${allClients.length} total, ${getActiveClients().length} active`);
 logger.info('  Mode: per-article × 4 styles (professional/social/investor/risk)');
