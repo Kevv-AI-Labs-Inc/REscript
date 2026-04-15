@@ -226,7 +226,29 @@ function parseScripts(raw: string): ScriptItem[] {
     if (cleaned.startsWith('```')) {
         cleaned = cleaned.replace(/^```(?:json)?\s*\n?/, '').replace(/\n?```\s*$/, '');
     }
-    return scriptsSchema.parse(JSON.parse(cleaned)) as ScriptItem[];
+
+    const firstBracket = cleaned.indexOf('[');
+    const lastBracket = cleaned.lastIndexOf(']');
+    if (firstBracket >= 0 && lastBracket > firstBracket) {
+        cleaned = cleaned.slice(firstBracket, lastBracket + 1);
+    }
+
+    const tryParse = (value: string) => scriptsSchema.parse(JSON.parse(value)) as ScriptItem[];
+
+    try {
+        return tryParse(cleaned);
+    } catch (error) {
+        const normalized = cleaned
+            .replace(/[\u2018\u2019]/g, '\'')
+            .replace(/[\u201C\u201D]/g, '"')
+            .replace(/,\s*([\]}])/g, '$1');
+
+        if (normalized !== cleaned) {
+            return tryParse(normalized);
+        }
+
+        throw error;
+    }
 }
 
 // ── Generate content for all modules ────────────────────────
@@ -263,12 +285,19 @@ async function generateModuleContent(
             try {
                 const prompt = buildTopicPrompt(topic, module, today, language, market, audienceProfile);
                 const result = await retry(
-                    async () => callAI(prompt, language, market, audienceProfile),
+                    async () => {
+                        const response = await callAI(prompt, language, market, audienceProfile);
+                        const scripts = parseScripts(response.content);
+                        return {
+                            usage: response.usage || emptyUsage(),
+                            scripts,
+                        };
+                    },
                     { retries: 2, delayMs: 3000, label: topic.title }
                 );
-                const scripts = parseScripts(result.content);
+                const scripts = result.scripts;
                 logger.info(`   ✅ Got ${scripts.length} scripts`);
-                observer?.onUsage?.(result.usage || emptyUsage(), {
+                observer?.onUsage?.(result.usage, {
                     itemLabel: topic.title,
                     step: `${module.name} · ${topic.title}`,
                     scriptsGenerated: scripts.length,

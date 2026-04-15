@@ -6,6 +6,7 @@ import { getSubscribers, getVipClients, type AudienceProfile, type Client, type 
 import { getDailyOutput, getLatestOutputForPreferences, saveDailyOutput, type OutputSummary } from './store/output-store.js';
 import {
     completePipelineGroup,
+    failPipelineGroup,
     completePipelineRun,
     failPipelineRun,
     recordPipelineEmailResults,
@@ -170,6 +171,7 @@ async function runPipelineInternal(dryRun = false, trigger: PipelineTrigger = 's
         const baseUrl = getBaseUrl();
         let totalNewsScripts = 0;
         let totalModuleScripts = 0;
+        const failedGroups: string[] = [];
 
         for (const group of groups) {
             const { language, market, audienceProfile, clients } = group;
@@ -178,56 +180,73 @@ async function runPipelineInternal(dryRun = false, trigger: PipelineTrigger = 's
 
             logger.info(`\n🌐 ═══ Processing group: ${language}/${market}/${audienceProfile} (${payingClients.length} subs/VIP) ═══`);
             startPipelineGroup(groupKey, `Preparing ${language}/${market}/${audienceProfile}`);
+            try {
+                logger.info(`📰 Searching news for ${market}...`);
+                updatePipelineGroupStep(groupKey, `Searching news for ${market}`);
+                const articles = await searchNews(market);
+                logger.info(`📰 Found ${articles.length} articles`);
+                const activeModules = getActiveContentModules(language, market, audienceProfile);
+                const moduleCallsPlanned = activeModules.reduce((sum, module) => sum + getTodayTopics(module, dateStr).length, 0);
+                updatePipelineGroupPlan(groupKey, Math.min(3, articles.length) + moduleCallsPlanned);
 
-            logger.info(`📰 Searching news for ${market}...`);
-            updatePipelineGroupStep(groupKey, `Searching news for ${market}`);
-            const articles = await searchNews(market);
-            logger.info(`📰 Found ${articles.length} articles`);
-            const activeModules = getActiveContentModules(language, market, audienceProfile);
-            const moduleCallsPlanned = activeModules.reduce((sum, module) => sum + getTodayTopics(module, dateStr).length, 0);
-            updatePipelineGroupPlan(groupKey, Math.min(3, articles.length) + moduleCallsPlanned);
+                logger.info(`✍️  Generating news scripts (${language}/${audienceProfile})...`);
+                updatePipelineGroupStep(groupKey, `Generating 3 news packs for ${market}`);
+                const dailyOutput = await generateDailyScripts(articles, 3, language, market, audienceProfile, {
+                    onStep: (step) => updatePipelineGroupStep(groupKey, step),
+                    onUsage: (usage, meta) => recordPipelineUsage(groupKey, usage, { scriptsGenerated: meta?.scriptsGenerated }),
+                });
 
-            logger.info(`✍️  Generating news scripts (${language}/${audienceProfile})...`);
-            updatePipelineGroupStep(groupKey, `Generating 3 news packs for ${market}`);
-            const dailyOutput = await generateDailyScripts(articles, 3, language, market, audienceProfile, {
-                onStep: (step) => updatePipelineGroupStep(groupKey, step),
-                onUsage: (usage, meta) => recordPipelineUsage(groupKey, usage, { scriptsGenerated: meta?.scriptsGenerated }),
-            });
+                logger.info(`📚 Generating content module scripts (${language}/${market}/${audienceProfile})...`);
+                updatePipelineGroupStep(groupKey, `Generating module playbooks for ${market}`);
+                const modules = await generateAllModuleContent(dateStr, language, market, audienceProfile, {
+                    onStep: (step) => updatePipelineGroupStep(groupKey, step),
+                    onUsage: (usage, meta) => recordPipelineUsage(groupKey, usage, { scriptsGenerated: meta?.scriptsGenerated }),
+                });
+                dailyOutput.modules = modules;
 
-            logger.info(`📚 Generating content module scripts (${language}/${market}/${audienceProfile})...`);
-            updatePipelineGroupStep(groupKey, `Generating module playbooks for ${market}`);
-            const modules = await generateAllModuleContent(dateStr, language, market, audienceProfile, {
-                onStep: (step) => updatePipelineGroupStep(groupKey, step),
-                onUsage: (usage, meta) => recordPipelineUsage(groupKey, usage, { scriptsGenerated: meta?.scriptsGenerated }),
-            });
-            dailyOutput.modules = modules;
+                const savedOutput = saveDailyOutput(dailyOutput);
+                dailyOutput.key = savedOutput.key;
 
-            const savedOutput = saveDailyOutput(dailyOutput);
-            dailyOutput.key = savedOutput.key;
+                const newsScripts = dailyOutput.articles.reduce((sum, article) => sum + article.scripts.length, 0);
+                const moduleScripts = modules.reduce((sum, module) => sum + module.articles.reduce((inner, article) => inner + article.scripts.length, 0), 0);
+                totalNewsScripts += newsScripts;
+                totalModuleScripts += moduleScripts;
 
-            const newsScripts = dailyOutput.articles.reduce((sum, article) => sum + article.scripts.length, 0);
-            const moduleScripts = modules.reduce((sum, module) => sum + module.articles.reduce((inner, article) => inner + article.scripts.length, 0), 0);
-            totalNewsScripts += newsScripts;
-            totalModuleScripts += moduleScripts;
+                if (payingClients.length > 0) {
+                    logger.info(`  💳 Sending to ${payingClients.length} subscribers/VIP...`);
+                    updatePipelineGroupStep(groupKey, `Sending to ${payingClients.length} subscriber/VIP recipients`);
+                    const subscriberResult = await sendBatchEmails(payingClients, dailyOutput, baseUrl, dryRun, false);
+                    recordPipelineEmailResults(groupKey, subscriberResult.sent, subscriberResult.failed);
+                    logger.info(`  💳 Subscribers/VIP: ${subscriberResult.sent} sent, ${subscriberResult.failed} failed`);
+                }
 
-            if (payingClients.length > 0) {
-                logger.info(`  💳 Sending to ${payingClients.length} subscribers/VIP...`);
-                updatePipelineGroupStep(groupKey, `Sending to ${payingClients.length} subscriber/VIP recipients`);
-                const subscriberResult = await sendBatchEmails(payingClients, dailyOutput, baseUrl, dryRun, false);
-                recordPipelineEmailResults(groupKey, subscriberResult.sent, subscriberResult.failed);
-                logger.info(`  💳 Subscribers/VIP: ${subscriberResult.sent} sent, ${subscriberResult.failed} failed`);
+                completePipelineGroup(groupKey);
+            } catch (error) {
+                const message = error instanceof Error ? error.message : String(error);
+                failedGroups.push(`${language}/${market}/${audienceProfile}: ${message}`);
+                failPipelineGroup(groupKey, message);
+                logger.error(`💥 Group failed, continuing to next group`, {
+                    group: `${language}/${market}/${audienceProfile}`,
+                    error: message,
+                });
+                continue;
             }
-
-            completePipelineGroup(groupKey);
         }
 
         const elapsed = ((Date.now() - startTime) / 1000).toFixed(1);
-        completePipelineRun();
+        if (failedGroups.length > 0) {
+            failPipelineRun(`${failedGroups.length} group(s) failed. Latest: ${failedGroups[failedGroups.length - 1]}`);
+        } else {
+            completePipelineRun();
+        }
         logger.info('\n🎉 ═══════════════════════════════════════════');
         logger.info(`🎉 Pipeline completed in ${elapsed}s`);
         logger.info(`🎉 Groups processed: ${groups.length}`);
         logger.info(`🎉 Total scripts: ${totalNewsScripts + totalModuleScripts} (news: ${totalNewsScripts}, modules: ${totalModuleScripts})`);
         logger.info(`🎉 Sent to: ${subscribers.length} subscribers + ${vipClients.length} VIP`);
+        if (failedGroups.length > 0) {
+            logger.warn(`🎉 Pipeline completed with ${failedGroups.length} failed group(s)`, { failedGroups });
+        }
         logger.info('🎉 ═══════════════════════════════════════════');
     } catch (error) {
         const elapsed = ((Date.now() - startTime) / 1000).toFixed(1);

@@ -68,10 +68,17 @@ export interface DailyGroupUsage extends UsageSnapshot {
     market: MarketId;
     audienceProfile: AudienceProfile;
     recipientCount: number;
+    subscriberCount: number;
+    vipCount: number;
+    scriptsGenerated: number;
     emailSent: number;
     emailFailed: number;
     runs: number;
     lastRunAt?: string;
+    currentStep?: string;
+    status?: PipelineGroupStatus;
+    completedAt?: string;
+    error?: string;
 }
 
 export interface DailyPipelineUsage extends UsageSnapshot {
@@ -201,15 +208,22 @@ function getDailyGroupEntry(day: DailyPipelineUsage, group: PipelineGroupSeed): 
             market: group.market,
             audienceProfile: group.audienceProfile,
             recipientCount: group.recipientCount,
+            subscriberCount: group.subscriberCount,
+            vipCount: group.vipCount,
+            scriptsGenerated: 0,
             emailSent: 0,
             emailFailed: 0,
             runs: 0,
             lastRunAt: undefined,
+            currentStep: 'Queued',
+            status: 'queued',
             ...createUsageSnapshot(),
         };
         day.groups.push(entry);
     } else {
         entry.recipientCount = Math.max(entry.recipientCount, group.recipientCount);
+        entry.subscriberCount = Math.max(entry.subscriberCount, group.subscriberCount);
+        entry.vipCount = Math.max(entry.vipCount, group.vipCount);
     }
     return entry;
 }
@@ -280,6 +294,8 @@ export function startPipelineRunMetrics(meta: {
     };
 
     state.currentRun = run;
+    const today = ensureTodayUsage(run.dateKey);
+    today.runCount += 1;
     persist();
     return run;
 }
@@ -320,6 +336,12 @@ export function startPipelineGroup(groupKey: string, step: string): void {
     state.currentRun.currentGroupKey = groupKey;
     state.currentRun.currentStep = step;
     state.currentRun.updatedAt = nowIso();
+
+    const today = ensureTodayUsage(state.currentRun.dateKey);
+    const dailyGroup = getDailyGroupEntry(today, group);
+    dailyGroup.status = 'running';
+    dailyGroup.currentStep = step;
+    dailyGroup.lastRunAt = nowIso();
     persist();
 }
 
@@ -335,6 +357,12 @@ export function updatePipelineGroupStep(groupKey: string, step: string): void {
     state.currentRun.currentGroupKey = groupKey;
     state.currentRun.currentStep = step;
     state.currentRun.updatedAt = nowIso();
+
+    const today = ensureTodayUsage(state.currentRun.dateKey);
+    const dailyGroup = getDailyGroupEntry(today, group);
+    dailyGroup.currentStep = step;
+    dailyGroup.status = group.status;
+    dailyGroup.lastRunAt = nowIso();
     persist();
 }
 
@@ -362,6 +390,7 @@ export function recordPipelineUsage(
     addUsageToSnapshot(today, usage);
     const dailyGroup = getDailyGroupEntry(today, group);
     addUsageToSnapshot(dailyGroup, usage);
+    dailyGroup.scriptsGenerated += Number(options?.scriptsGenerated || 0);
     dailyGroup.lastRunAt = nowIso();
 
     state.currentRun.updatedAt = nowIso();
@@ -412,6 +441,10 @@ export function completePipelineGroup(groupKey: string): void {
     const dailyGroup = getDailyGroupEntry(today, group);
     dailyGroup.runs += 1;
     dailyGroup.lastRunAt = nowIso();
+    dailyGroup.status = 'completed';
+    dailyGroup.currentStep = 'Completed';
+    dailyGroup.completedAt = group.completedAt;
+    dailyGroup.error = undefined;
 
     persist();
 }
@@ -431,6 +464,14 @@ export function failPipelineRun(error: string): void {
         currentGroup.error = error;
         currentGroup.currentStep = 'Failed';
         currentGroup.completedAt = finishedAt;
+
+        const today = ensureTodayUsage(state.currentRun.dateKey);
+        const dailyGroup = getDailyGroupEntry(today, currentGroup);
+        dailyGroup.status = 'failed';
+        dailyGroup.error = error;
+        dailyGroup.currentStep = 'Failed';
+        dailyGroup.completedAt = finishedAt;
+        dailyGroup.lastRunAt = finishedAt;
     }
 
     const latestRun: PipelineRunMetrics = {
@@ -468,8 +509,35 @@ export function completePipelineRun(): void {
     state.currentRun = null;
 
     const today = ensureTodayUsage(latestRun.dateKey);
-    today.runCount += 1;
     today.lastCompletedAt = finishedAt;
+
+    persist();
+}
+
+export function failPipelineGroup(groupKey: string, error: string): void {
+    if (!state.currentRun) {
+        return;
+    }
+
+    const finishedAt = nowIso();
+    const group = state.currentRun.groups.find((item) => item.key === groupKey);
+    if (!group) {
+        return;
+    }
+
+    group.status = 'failed';
+    group.error = error;
+    group.currentStep = 'Failed';
+    group.completedAt = finishedAt;
+    state.currentRun.updatedAt = finishedAt;
+
+    const today = ensureTodayUsage(state.currentRun.dateKey);
+    const dailyGroup = getDailyGroupEntry(today, group);
+    dailyGroup.status = 'failed';
+    dailyGroup.error = error;
+    dailyGroup.currentStep = 'Failed';
+    dailyGroup.completedAt = finishedAt;
+    dailyGroup.lastRunAt = finishedAt;
 
     persist();
 }

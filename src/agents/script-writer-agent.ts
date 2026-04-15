@@ -268,13 +268,33 @@ async function callAzureOpenAI(
 
 // ── Parse JSON from AI response ─────────────────────────────
 function parseScripts(raw: string): ScriptItem[] {
-    // Strip markdown code fences if present
     let cleaned = raw.trim();
     if (cleaned.startsWith('```')) {
         cleaned = cleaned.replace(/^```(?:json)?\s*\n?/, '').replace(/\n?```\s*$/, '');
     }
 
-    return scriptsSchema.parse(JSON.parse(cleaned)) as ScriptItem[];
+    const firstBracket = cleaned.indexOf('[');
+    const lastBracket = cleaned.lastIndexOf(']');
+    if (firstBracket >= 0 && lastBracket > firstBracket) {
+        cleaned = cleaned.slice(firstBracket, lastBracket + 1);
+    }
+
+    const tryParse = (value: string) => scriptsSchema.parse(JSON.parse(value)) as ScriptItem[];
+
+    try {
+        return tryParse(cleaned);
+    } catch (error) {
+        const normalized = cleaned
+            .replace(/[\u2018\u2019]/g, '\'')
+            .replace(/[\u201C\u201D]/g, '"')
+            .replace(/,\s*([\]}])/g, '$1');
+
+        if (normalized !== cleaned) {
+            return tryParse(normalized);
+        }
+
+        throw error;
+    }
 }
 
 // ── Generate scripts for one article ────────────────────────
@@ -294,13 +314,20 @@ async function generateForArticle(
     const prompt = buildPrompt(article, date, language, market, audienceProfile);
 
     const result = await retry(
-        async () => callAzureOpenAI(prompt, language, market, audienceProfile),
+        async () => {
+            const response = await callAzureOpenAI(prompt, language, market, audienceProfile);
+            const scripts = parseScripts(response.content);
+            return {
+                usage: response.usage || emptyUsage(),
+                scripts,
+            };
+        },
         { retries: 3, delayMs: 3000, label: `Scripts for article ${index + 1}` }
     );
 
-    const scripts = parseScripts(result.content);
+    const scripts = result.scripts;
     logger.info(`   ✅ Got ${scripts.length} style scripts`);
-    observer?.onUsage?.(result.usage || emptyUsage(), {
+    observer?.onUsage?.(result.usage, {
         itemLabel: article.title,
         step: `新闻 ${index + 1}/${total}`,
         scriptsGenerated: scripts.length,
@@ -344,8 +371,16 @@ export async function generateDailyScripts(
     const results: ArticleScripts[] = [];
 
     for (let i = 0; i < selected.length; i++) {
-        const result = await generateForArticle(selected[i], today, i, selected.length, language, market, audienceProfile, observer);
-        results.push(result.article);
+        try {
+            const result = await generateForArticle(selected[i], today, i, selected.length, language, market, audienceProfile, observer);
+            results.push(result.article);
+        } catch (error) {
+            logger.error(`❌ Skipping article ${i + 1}/${selected.length} after repeated parse/generation failure`, {
+                title: selected[i].title,
+                error: error instanceof Error ? error.message : String(error),
+            });
+            observer?.onStep?.(`新闻 ${i + 1}/${selected.length} 失败，已跳过`);
+        }
 
         // Delay between calls to avoid rate limiting
         if (i < selected.length - 1) {
